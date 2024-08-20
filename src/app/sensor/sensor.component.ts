@@ -4,6 +4,7 @@ import { DataService } from '../service/data.service';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Subscription } from 'rxjs';
+import { FilterComponent } from "../common/filter/filter.component";
 
 
 @Component({
@@ -11,7 +12,8 @@ import { Subscription } from 'rxjs';
     standalone: true,
     imports: [
         MatTableModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        FilterComponent
     ],
     templateUrl: './sensor.component.html',
     styleUrl: './sensor.component.css'
@@ -24,6 +26,9 @@ export class SensorComponent {
     sensorData: Sensor[] = [];
     displayedColumns: string[] = ['id', 'name', 'value', 'unit', 'type'];
     dataSource = new MatTableDataSource<Sensor>();
+
+    uniqueUnits: string[] = [];
+    uniqueTypes: string[] = [];
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -38,20 +43,17 @@ export class SensorComponent {
 
             // Update the dataSource with the new data
             this.dataSource.data = this.sensorData;
+
+            this.uniqueUnits = [...new Set(this.sensorData.map(item => item.unit))];
+            this.uniqueTypes = [...new Set(this.sensorData.map(item => item.type))];
         });
 
         this.intervalId = setInterval(() => {
             this.updateSensorValues();
         }, 1000);
-    }
 
-    // ngOnChanges(changes: SimpleChanges): void {
-    //     if (changes['sensorData']) {
-    //         // Handle changes in sensorData
-    //         this.dataSource.data = this.sensorData;
-    //         console.log("data changed");
-    //     }
-    // }
+        this.dataSource.filterPredicate = this.createFilter();
+    }
 
     ngOnDestroy(): void {
         if (this.intervalId) {
@@ -69,8 +71,19 @@ export class SensorComponent {
         });
     }
 
-    applyFilter(event: Event): void {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
+    onFilterChange(filterValues: { unit: string, type: string, search: string }) {
+        this.dataSource.filter = JSON.stringify(filterValues);
+    }
+
+    createFilter(): (data: Sensor, filter: string) => boolean {
+        return (data: Sensor, filter: string): boolean => {
+            const searchTerms = JSON.parse(filter);
+            const isSearchMatch = data.name.toLowerCase().includes(searchTerms.search) ||
+                data.id.toString().includes(searchTerms.search) ||
+                data.value.toString().includes(searchTerms.search);
+            const isUnitMatch = searchTerms.unit ? data.unit === searchTerms.unit : true;
+            const isTypeMatch = searchTerms.type ? data.type === searchTerms.type : true;
+            return isSearchMatch && isUnitMatch && isTypeMatch;
+        };
     }
 }
