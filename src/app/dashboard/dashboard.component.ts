@@ -6,11 +6,12 @@ import { Device } from '../types/device.type';
 import { ChartComponent } from "./chart/chart.component";
 import { DataService } from '../service/data.service';
 import { Subscription } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [CardComponent, DeviceControlComponent, ChartComponent],
+    imports: [CardComponent, DeviceControlComponent, ChartComponent, ButtonModule],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css'
 })
