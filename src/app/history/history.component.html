@@ -1,9 +1,9 @@
-<div class="flex justify-start my-4 mx-2">
+<!-- <div class="flex justify-start my-4 mx-2">
     <app-filter [uniqueUnits]="uniqueValues" [uniqueTypes]="uniqueTypes" (filterChange)="onFilterChange($event)">
     </app-filter>
-</div>
+</div> -->
 
-<div class="mat-elevation-z8">
+<!-- <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource">
 
         <ng-container matColumnDef="id">
@@ -38,4 +38,6 @@
     <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons
         aria-label="Select page of periodic elements">
     </mat-paginator>
-</div>
+</div> -->
+
+<app-data-table [datas]="historyData"></app-data-table>

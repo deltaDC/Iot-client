@@ -2,7 +2,7 @@
     @for (sensorData of sensorDataCards; track $index) {
     <app-card [data]="sensorData"></app-card>
     }
-    <div class="flex flex-col space-y-4 p-4 bg-gray-100 rounded-lg shadow-md">
+    <div class="flex flex-col space-y-4 p-4 rounded-lg shadow-md">
         @for (device of deviceDataSwitches; track $index) {
         <app-device-control [data]="device"></app-device-control>
         }
@@ -11,12 +11,6 @@
 
 <br>
 
-<div class="flex flex-col space-y-4 p-4 bg-gray-100 rounded-lg shadow-md">
+<div class="flex flex-col space-y-4 p-4 rounded-lg shadow-md">
     <app-chart [sensorData]="sensorDataCards"></app-chart>
-</div>
-
-<br>
-
-<div class="card flex justify-content-center">
-    <p-button label="Check" icon="pi pi-check"></p-button>
 </div>

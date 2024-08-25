@@ -4,4 +4,5 @@ export interface Sensor {
     value: number;
     unit: string;
     type: string;
+    icon?: string;
 }

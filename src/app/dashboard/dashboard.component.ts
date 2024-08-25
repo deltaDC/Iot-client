@@ -52,9 +52,10 @@ export class DashboardComponent {
     }
 
     updateSensorValues(): void {
-        this.sensorSubscription = this.dataService.updateSensorValues().subscribe(data => {
-            this.sensorDataCards = data;
-        });
+        // this.sensorSubscription = this.dataService.updateSensorValues().subscribe(data => {
+        //     this.sensorDataCards = data;
+        // });
+        this.dataService.updateSensorValues()
     }
 
 }

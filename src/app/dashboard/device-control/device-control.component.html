@@ -1,3 +1,4 @@
 <label class="flex items-center">
-    <mat-slide-toggle>{{data.name}}</mat-slide-toggle>
+    <p-toggleButton class="mr-4" [(ngModel)]="checked" onLabel="On" offLabel="Off" />
+    <span>{{data.name}}</span>
 </label>

@@ -6,7 +6,7 @@ import { SensorComponent } from './sensor/sensor.component';
 
 export const routes: Routes = [
     {
-        path: '',
+        path: 'dashboard',
         component: DashboardComponent,
     },
     {

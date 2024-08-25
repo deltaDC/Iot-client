@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Device } from '../types/device.type';
 import { Sensor } from '../types/sensor.type';
 import { History } from '../types/history.type';
@@ -75,16 +75,54 @@ export class DataService {
         }
     ];
 
+    // getSensorData(): Observable<Sensor[]> {
+    //     return of(this.sensorData);
+    // }
+
+    // getDeviceData(): Observable<Device[]> {
+    //     return of(this.deviceData);
+    // }
+
+    // getHistoryData(): Observable<History[]> {
+    //     return of(this.historyData);
+    // }
+
+    // getRandomValue(type: string): number {
+    //     switch (type) {
+    //         case 'temperature':
+    //             return Math.floor(Math.random() * 35);
+    //         case 'humidity':
+    //             return Math.floor(Math.random() * 100);
+    //         case 'brightness':
+    //             return Math.floor(Math.random() * 500);
+    //         default:
+    //             return 0;
+    //     }
+    // }
+
+    // updateSensorValues(): Observable<Sensor[]> {
+    //     this.sensorData = this.sensorData.map(sensor => ({
+    //         ...sensor,
+    //         value: this.getRandomValue(sensor.type),
+    //         id: Math.floor(Math.random() * (100 - 4 + 1)) + 4
+    //     }));
+    //     return of(this.sensorData);
+    // }
+
+    private sensorDataSubject = new BehaviorSubject<Sensor[]>(this.sensorData);
+    private deviceDataSubject = new BehaviorSubject<Device[]>(this.deviceData);
+    private historyDataSubject = new BehaviorSubject<History[]>(this.historyData);
+
     getSensorData(): Observable<Sensor[]> {
-        return of(this.sensorData);
+        return this.sensorDataSubject.asObservable();
     }
 
     getDeviceData(): Observable<Device[]> {
-        return of(this.deviceData);
+        return this.deviceDataSubject.asObservable();
     }
 
     getHistoryData(): Observable<History[]> {
-        return of(this.historyData);
+        return this.historyDataSubject.asObservable();
     }
 
     getRandomValue(type: string): number {
@@ -100,11 +138,21 @@ export class DataService {
         }
     }
 
-    updateSensorValues(): Observable<Sensor[]> {
+    // updateSensorValues(): Observable<Sensor[]> {
+    //     this.sensorData = this.sensorData.map(sensor => ({
+    //         ...sensor,
+    //         value: this.getRandomValue(sensor.type),
+    //         id: Math.floor(Math.random() * (100 - 4 + 1)) + 4
+    //     }));
+    //     return of(this.sensorData);
+    // }
+
+    updateSensorValues(): void {
         this.sensorData = this.sensorData.map(sensor => ({
             ...sensor,
-            value: this.getRandomValue(sensor.type)
+            value: this.getRandomValue(sensor.type),
+            id: Math.floor(Math.random() * (100 - 4 + 1)) + 4
         }));
-        return of(this.sensorData);
+        this.sensorDataSubject.next(this.sensorData);
     }
 }

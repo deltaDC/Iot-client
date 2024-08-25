@@ -1,24 +1,26 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
+import { InputIconModule } from 'primeng/inputicon';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
     selector: 'app-filter',
     standalone: true,
     imports: [
-        MatFormFieldModule,
-        MatSelectModule,
         FormsModule,
-        MatInputModule
+        InputIconModule,
+        IconFieldModule,
+        InputTextModule,
+        DropdownModule
     ],
     templateUrl: './filter.component.html',
     styleUrl: './filter.component.css'
 })
 export class FilterComponent {
-    @Input() uniqueUnits: string[] | boolean[] = [];
-    @Input() uniqueTypes: string[] = [];
+    @Input() uniqueUnits: any[] = [];
+    @Input() uniqueTypes: any[] = [];
     @Output() filterChange = new EventEmitter<{ unit: string, type: string, search: string }>();
 
     filterValues = {
@@ -27,6 +29,16 @@ export class FilterComponent {
         search: ''
     };
 
+    ngOnInit() {
+        this.uniqueUnits = this.uniqueUnits.map((unit: any) => {
+            return { name: unit };
+        });
+
+        this.uniqueTypes = this.uniqueTypes.map((unit: any) => {
+            return { name: unit };
+        });
+    }
+
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         this.filterValues.search = filterValue.trim().toLowerCase();
@@ -34,13 +46,14 @@ export class FilterComponent {
     }
 
     applyUnitFilter(event: any) {
-        const filterValue = event.value;
+        console.log("event")
+        const filterValue = event.value?.name;
         this.filterValues.unit = filterValue;
         this.filterChange.emit(this.filterValues);
     }
 
     applyTypeFilter(event: any) {
-        const filterValue = event.value;
+        const filterValue = event.value?.name;
         this.filterValues.type = filterValue;
         this.filterChange.emit(this.filterValues);
     }
