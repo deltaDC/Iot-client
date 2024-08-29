@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Device } from '../types/device.type';
 import { Sensor } from '../types/sensor.type';
 import { History } from '../types/history.type';
+import { Data } from '../types/sensor-data.type';
 
 @Injectable({
     providedIn: 'root'
@@ -12,25 +13,58 @@ export class DataService {
     private sensorData: Sensor[] = [
         {
             id: 1,
-            name: 'Temperature Sensor',
-            value: 22,
-            unit: 'Celsius',
-            type: 'temperature'
-        },
-        {
-            id: 2,
-            name: 'Humidity Sensor',
-            value: 45,
-            unit: 'Percentage',
-            type: 'humidity'
-        },
-        {
-            id: 3,
-            name: 'Brightness Sensor',
-            value: 300,
-            unit: 'Lux',
-            type: 'brightness'
+            name: 'sensor data 1',
+            data: {
+                temperature: {
+                    value: 22,
+                    unit: 'Celsius',
+                },
+                humidity: {
+                    value: 45,
+                    unit: 'Percentage',
+                },
+                brightness: {
+                    value: 300,
+                    unit: 'Lux',
+                }
+            }
         }
+        // {
+        //     id: 2,
+        //     name: 'sensor data 2',
+        //     data: {
+        //         temperature: {
+        //             value: 23,
+        //             unit: 'Celsius',
+        //         },
+        //         humidity: {
+        //             value: 50,
+        //             unit: 'Percentage',
+        //         },
+        //         brightness: {
+        //             value: 350,
+        //             unit: 'Lux',
+        //         }
+        //     }
+        // },
+        // {
+        //     id: 3,
+        //     name: 'sensor data 3',
+        //     data: {
+        //         temperature: {
+        //             value: 32,
+        //             unit: 'Celsius',
+        //         },
+        //         humidity: {
+        //             value: 80,
+        //             unit: 'Percentage',
+        //         },
+        //         brightness: {
+        //             value: 450,
+        //             unit: 'Lux',
+        //         }
+        //     }
+        // }
     ];
 
     private deviceData: Device[] = [
@@ -75,40 +109,6 @@ export class DataService {
         }
     ];
 
-    // getSensorData(): Observable<Sensor[]> {
-    //     return of(this.sensorData);
-    // }
-
-    // getDeviceData(): Observable<Device[]> {
-    //     return of(this.deviceData);
-    // }
-
-    // getHistoryData(): Observable<History[]> {
-    //     return of(this.historyData);
-    // }
-
-    // getRandomValue(type: string): number {
-    //     switch (type) {
-    //         case 'temperature':
-    //             return Math.floor(Math.random() * 35);
-    //         case 'humidity':
-    //             return Math.floor(Math.random() * 100);
-    //         case 'brightness':
-    //             return Math.floor(Math.random() * 500);
-    //         default:
-    //             return 0;
-    //     }
-    // }
-
-    // updateSensorValues(): Observable<Sensor[]> {
-    //     this.sensorData = this.sensorData.map(sensor => ({
-    //         ...sensor,
-    //         value: this.getRandomValue(sensor.type),
-    //         id: Math.floor(Math.random() * (100 - 4 + 1)) + 4
-    //     }));
-    //     return of(this.sensorData);
-    // }
-
     private sensorDataSubject = new BehaviorSubject<Sensor[]>(this.sensorData);
     private deviceDataSubject = new BehaviorSubject<Device[]>(this.deviceData);
     private historyDataSubject = new BehaviorSubject<History[]>(this.historyData);
@@ -125,32 +125,27 @@ export class DataService {
         return this.historyDataSubject.asObservable();
     }
 
-    getRandomValue(type: string): number {
-        switch (type) {
+    getRandomValue(name: string): Data {
+        switch (name) {
             case 'temperature':
-                return Math.floor(Math.random() * 35);
+                return { value: Math.floor(Math.random() * 35), unit: 'Celsius' };
             case 'humidity':
-                return Math.floor(Math.random() * 100);
+                return { value: Math.floor(Math.random() * 100), unit: 'Percentage' };
             case 'brightness':
-                return Math.floor(Math.random() * 500);
+                return { value: Math.floor(Math.random() * 500), unit: 'Lux' };
             default:
-                return 0;
+                return { value: 0, unit: '' };
         }
     }
-
-    // updateSensorValues(): Observable<Sensor[]> {
-    //     this.sensorData = this.sensorData.map(sensor => ({
-    //         ...sensor,
-    //         value: this.getRandomValue(sensor.type),
-    //         id: Math.floor(Math.random() * (100 - 4 + 1)) + 4
-    //     }));
-    //     return of(this.sensorData);
-    // }
 
     updateSensorValues(): void {
         this.sensorData = this.sensorData.map(sensor => ({
             ...sensor,
-            value: this.getRandomValue(sensor.type),
+            data: {
+                temperature: this.getRandomValue('temperature'),
+                humidity: this.getRandomValue('humidity'),
+                brightness: this.getRandomValue('brightness'),
+            },
             id: Math.floor(Math.random() * (100 - 4 + 1)) + 4
         }));
         this.sensorDataSubject.next(this.sensorData);

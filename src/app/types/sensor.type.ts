@@ -1,8 +1,12 @@
+import { Data } from "./sensor-data.type";
+
 export interface Sensor {
     id: number;
     name: string;
-    value: number;
-    unit: string;
-    type: string;
+    data: {
+        temperature: Data
+        humidity: Data
+        brightness: Data
+    }
     icon?: string;
 }

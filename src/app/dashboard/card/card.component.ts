@@ -33,8 +33,8 @@ export class CardComponent {
         return this.iconMapping[type] || 'pi pi-question-circle';
     }
 
-    getIconColor(type: string, value: number): string {
-        switch (type) {
+    getIconColor(name: string, value: number): string {
+        switch (name) {
             case 'temperature':
                 return value < 20 ? 'text-blue-500' : value < 30 ? 'text-yellow-500' : 'text-red-500';
             case 'humidity':

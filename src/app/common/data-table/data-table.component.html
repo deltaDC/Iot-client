@@ -42,7 +42,7 @@
             <tr>
                 <th></th>
                 <th *ngFor="let column of columns">
-                    @if (column.field === "unit" || column.field === "type") {
+                    @if (column.field === "unit") {
                     <p-columnFilter field="representative" matchMode="in" [showMenu]="false">
                         <ng-template pTemplate="filter" let-value let-filter="filterCallback">
                             <p-dropdown showClear="true" [options]="getDropdownOptions(column.field)"
@@ -70,10 +70,10 @@
                 <td *ngFor="let column of columns">
                     {{ rowData[column.field] }}
                 </td>
-                <td>
+                <!-- <td>
                     <button class="mr-2" pButton type="button" icon="pi pi-pencil" (click)="editData(rowData)"></button>
                     <button pButton type="button" icon="pi pi-trash" (click)="deleteData(rowData)"></button>
-                </td>
+                </td> -->
             </tr>
         </ng-template>
 

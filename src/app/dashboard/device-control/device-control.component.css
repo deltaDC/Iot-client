@@ -1,0 +1,14 @@
+::ng-deep p-toggleButton .ui-button {
+    background-color: #F2F2F2 !important;
+    color: #FFE5C2 !important;
+}
+
+::ng-deep p-toggleButton.lightbulb-on .ui-button {
+    background-color: #FEBD3C !important;
+    color: #333333 !important;
+}
+
+::ng-deep p-toggleButton.lightbulb-off .ui-button {
+    background-color: #F2F2F2 !important;
+    color: #FFE5C2 !important;
+}

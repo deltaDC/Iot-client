@@ -17,8 +17,8 @@ import { ButtonModule } from 'primeng/button';
 })
 export class DashboardComponent {
 
-    sensorDataCards: Sensor[] = [];
-    deviceDataSwitches: Device[] = [];
+    sensorDatas: Sensor[] = [];
+    deviceDatas: Device[] = [];
     intervalId: any;
     private sensorSubscription: Subscription | undefined;
     private deviceSubscription: Subscription | undefined;
@@ -27,11 +27,11 @@ export class DashboardComponent {
 
     ngOnInit(): void {
         this.sensorSubscription = this.dataService.getSensorData().subscribe(data => {
-            this.sensorDataCards = data;
+            this.sensorDatas = data;
         });
 
         this.deviceSubscription = this.dataService.getDeviceData().subscribe(data => {
-            this.deviceDataSwitches = data;
+            this.deviceDatas = data;
         })
 
         this.intervalId = setInterval(() => {
@@ -52,9 +52,6 @@ export class DashboardComponent {
     }
 
     updateSensorValues(): void {
-        // this.sensorSubscription = this.dataService.updateSensorValues().subscribe(data => {
-        //     this.sensorDataCards = data;
-        // });
         this.dataService.updateSensorValues()
     }
 

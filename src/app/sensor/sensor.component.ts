@@ -27,15 +27,9 @@ export class SensorComponent {
     sub: Subscription | undefined;
     sensorData: Sensor[] = [];
 
-    uniqueUnits: string[] = [];
-    uniqueTypes: string[] = [];
-
     ngOnInit(): void {
         this.dataService.getSensorData().subscribe(newData => {
             if (this.sensorData.length < 20) this.sensorData.push(...newData);
-
-            this.uniqueUnits = [...new Set(this.sensorData.map(item => item.unit))];
-            this.uniqueTypes = [...new Set(this.sensorData.map(item => item.type))];
         });
 
         this.intervalId = setInterval(() => {
