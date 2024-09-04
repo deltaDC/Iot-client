@@ -1,6 +1,6 @@
-<div class="flex flex-wrap gap-4 justify-center mt-5">
+<div class="flex justify-center mt-5">
     <!-- @for (data of sensorDatas; track $index) { -->
-    <app-card class="w-1/4" [data]="sensorDatas[0]"></app-card>
+    <app-card [data]="sensorDatas[0]"></app-card>
     <!-- } -->
 </div>
 
@@ -8,11 +8,11 @@
 
 <div class="flex flex-col space-y-4 p-8 rounded-lg shadow-md">
     <div class="flex flex-row space-x-4">
-        <!-- <app-chart class="flex-grow" [sensorData]="sensorDatas"></app-chart> -->
-        <!-- <div class="flex flex-col space-y-4 p-4 rounded-lg shadow-md w-1/5">
+        <app-chart class="flex-grow" [sensorDatas]="sensorDatas"></app-chart>
+        <div class="flex flex-col space-y-4 p-4 rounded-lg shadow-md w-1/5">
             @for (device of deviceDatas; track $index) {
             <app-device-control [data]="device"></app-device-control>
             }
-        </div> -->
+        </div>
     </div>
 </div>

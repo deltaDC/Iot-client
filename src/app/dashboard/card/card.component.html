@@ -1,36 +1,40 @@
-<div class="flex flex-col space-y-6">
-    <div class="shadow-lg rounded-lg p-8 flex items-center w-full h-56">
-        <!-- <fa-icon [ngClass]="getIconColor(data.name, data.value)" [icon]="getIcon(data.name)"
-            class="text-6xl text-white-500 mr-6"></fa-icon> -->
-        <div>
-            <h2 class="text-2xl font-semibold">{{ data.name }}</h2>
-            <p class="text-gray-600 text-lg">{{ data.data.temperature.value }}</p>
-            <p class="text-gray-600 text-lg">{{ data.data.temperature.unit }}</p>
+<div class="flex flex-wrap gap-4">
+
+    <div class="flex flex-col space-y-6">
+        <div class="shadow-lg rounded-lg p-8 flex items-center h-56 w-72">
+            <fa-icon [ngClass]="getIconColor('temperature', data.data.temperature.value)" [icon]="tempIcon"
+                class="text-6xl text-white-500 mr-6"></fa-icon>
+            <div>
+                <h2 class="text-2xl font-semibold">{{ data.name }}</h2>
+                <p class="text-gray-600 text-lg">{{ data.data.temperature.value }}</p>
+                <p class="text-gray-600 text-lg">{{ data.data.temperature.unit }}</p>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="flex flex-col space-y-6">
-    <div class="shadow-lg rounded-lg p-8 flex items-center w-full h-56">
-        <!-- <fa-icon [ngClass]="getIconColor(data.name, data.value)" [icon]="getIcon(data.name)"
-            class="text-6xl text-white-500 mr-6"></fa-icon> -->
-        <div>
-            <h2 class="text-2xl font-semibold">{{ data.name }}</h2>
-            <p class="text-gray-600 text-lg">{{ data.data.humidity.value }}</p>
-            <p class="text-gray-600 text-lg">{{ data.data.humidity.unit }}</p>
+    <div class="flex flex-col space-y-6">
+        <div class="shadow-lg rounded-lg p-8 flex items-center w-72 h-56">
+            <fa-icon [ngClass]="getIconColor('humidity', data.data.humidity.value)" [icon]="humidityIcon"
+                class="text-6xl text-white-500 mr-6"></fa-icon>
+            <div>
+                <h2 class="text-2xl font-semibold">{{ data.name }}</h2>
+                <p class="text-gray-600 text-lg">{{ data.data.humidity.value }}</p>
+                <p class="text-gray-600 text-lg">{{ data.data.humidity.unit }}</p>
+            </div>
         </div>
     </div>
-</div>
 
 
-<div class="flex flex-col space-y-6">
-    <div class="shadow-lg rounded-lg p-8 flex items-center w-full h-56">
-        <!-- <fa-icon [ngClass]="getIconColor(data.name, data.value)" [icon]="getIcon(data.name)"
-            class="text-6xl text-white-500 mr-6"></fa-icon> -->
-        <div>
-            <h2 class="text-2xl font-semibold">{{ data.name }}</h2>
-            <p class="text-gray-600 text-lg">{{ data.data.brightness.value }}</p>
-            <p class="text-gray-600 text-lg">{{ data.data.brightness.unit }}</p>
+    <div class="flex flex-col space-y-6">
+        <div class="shadow-lg rounded-lg p-8 flex items-center w-72 h-56">
+            <fa-icon [ngClass]="getIconColor('brightness', data.data.brightness.value)" [icon]="brightnessIcon"
+                class="text-6xl text-white-500 mr-6"></fa-icon>
+            <div>
+                <h2 class="text-2xl font-semibold">{{ data.name }}</h2>
+                <p class="text-gray-600 text-lg">{{ data.data.brightness.value }}</p>
+                <p class="text-gray-600 text-lg">{{ data.data.brightness.unit }}</p>
+            </div>
         </div>
     </div>
+
 </div>

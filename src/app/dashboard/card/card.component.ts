@@ -23,15 +23,9 @@ import { faSun } from '@fortawesome/free-solid-svg-icons';
 export class CardComponent {
     @Input() data!: Sensor;
 
-    iconMapping: { [key: string]: any } = {
-        temperature: faTemperatureThreeQuarters,
-        humidity: faDroplet,
-        brightness: faSun
-    };
-
-    getIcon(type: string): string {
-        return this.iconMapping[type] || 'pi pi-question-circle';
-    }
+    tempIcon = faTemperatureThreeQuarters;
+    humidityIcon = faDroplet;
+    brightnessIcon = faSun;
 
     getIconColor(name: string, value: number): string {
         switch (name) {

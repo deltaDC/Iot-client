@@ -20,12 +20,12 @@ export class NavbarComponent {
                 routerLink: ['/dashboard']
             },
             {
-                label: 'Sensor',
+                label: 'Data Sensor',
                 icon: 'pi pi-database',
                 routerLink: ['/sensor']
             },
             {
-                label: 'History',
+                label: 'Action History',
                 icon: 'pi pi-history',
                 routerLink: ['/history']
             },

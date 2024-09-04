@@ -68,7 +68,7 @@
                     <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                 </td>
                 <td *ngFor="let column of columns">
-                    {{ rowData[column.field] }}
+                    {{getRowDataValue(column.field, rowData)}}
                 </td>
                 <!-- <td>
                     <button class="mr-2" pButton type="button" icon="pi pi-pencil" (click)="editData(rowData)"></button>

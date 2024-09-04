@@ -71,7 +71,27 @@ export class DataTableComponent {
     ngOnInit() {
 
         if (this.datas.length > 0) {
-            this.columns = Object.keys(this.datas[0]).map(key => ({ field: key, header: this.capitalizeFirstLetter(key) }));
+            this.columns = [];
+            // Object.keys(this.datas[0]).forEach(key => {
+            //     if (key === 'data') {
+            //         // Extract nested keys
+            //         Object.keys(this.datas[0][key]).forEach(nestedKey => {
+            //             this.columns.push({ field: nestedKey, header: this.capitalizeFirstLetter(nestedKey) });
+            //         });
+            //     } else {
+            //         this.columns.push({ field: key, header: this.capitalizeFirstLetter(key) });
+            //     }
+            // });
+            Object.keys(this.datas[0]).forEach(key => {
+                if (key === 'data') {
+                    // Extract nested keys
+                    Object.keys(this.datas[0][key]).forEach(nestedKey => {
+                        this.columns.push({ field: `data.${nestedKey}.value`, header: this.capitalizeFirstLetter(nestedKey) });
+                    });
+                } else {
+                    this.columns.push({ field: key, header: this.capitalizeFirstLetter(key) });
+                }
+            });
             this.globalFilterFields = this.columns.map(column => column.field);
         }
         console.log('Columns:', this.columns);
@@ -213,5 +233,59 @@ export class DataTableComponent {
         );
 
         console.log("Filtered Datas:", this.datas);
+    }
+
+    customSort(event: any) {
+        console.log("on custom sort");
+        event.data.sort((data1: any, data2: any) => {
+            let value1 = this.resolveFieldData(data1, event.field);
+            let value2 = this.resolveFieldData(data2, event.field);
+            let result = null;
+
+            if (value1 == null && value2 != null)
+                result = -1;
+            else if (value1 != null && value2 == null)
+                result = 1;
+            else if (value1 == null && value2 == null)
+                result = 0;
+            else if (typeof value1 === 'string' && typeof value2 === 'string')
+                result = value1.localeCompare(value2);
+            else
+                result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
+
+            return (event.order * result);
+        });
+    }
+
+    resolveFieldData(data: any, field: string): any {
+        if (data && field) {
+            let fields: string[] = field.split('.');
+            let value = data;
+            for (let i = 0; i < fields.length; i++) {
+                if (value == null) {
+                    return null;
+                }
+                value = value[fields[i]];
+            }
+            return value;
+        } else {
+            return null;
+        }
+    }
+
+    getRowDataValue(columnField: any, rowData: string): any {
+        if (columnField.includes('.')) {
+            const nestedFields = columnField.split('.');
+            let value = rowData;
+            for (let i = 0; i < nestedFields.length; i++) {
+                if (value == null) {
+                    return null;
+                }
+                value = value[nestedFields[i]];
+            }
+            return value;
+        } else {
+            return rowData[columnField];
+        }
     }
 }
