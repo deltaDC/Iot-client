@@ -30,11 +30,11 @@ export class CardComponent {
     getIconColor(name: string, value: number): string {
         switch (name) {
             case 'temperature':
-                return value < 20 ? 'text-blue-500' : value < 30 ? 'text-yellow-500' : 'text-red-500';
+                return value < 20 ? 'text-blue-500' : value < 30 ? 'text-orange-500' : 'text-red-500';
             case 'humidity':
-                return value < 30 ? 'text-blue-500' : value < 70 ? 'text-yellow-500' : 'text-red-500';
+                return value < 30 ? 'text-gray-500' : value < 70 ? 'text-blue-500' : 'text-blue-700';
             case 'brightness':
-                return value < 100 ? 'text-blue-500' : value < 300 ? 'text-yellow-500' : 'text-red-500';
+                return value < 100 ? 'text-gray-700' : value < 300 ? 'text-gray-500' : 'text-yellow-500';
             default:
                 return 'text-gray-500';
         }

@@ -5,7 +5,7 @@
             <fa-icon [ngClass]="getIconColor('temperature', data.data.temperature.value)" [icon]="tempIcon"
                 class="text-6xl text-white-500 mr-6"></fa-icon>
             <div>
-                <h2 class="text-2xl font-semibold">{{ data.name }}</h2>
+                <h2 class="text-2xl font-semibold">Temperature</h2>
                 <p class="text-gray-600 text-lg">{{ data.data.temperature.value }}</p>
                 <p class="text-gray-600 text-lg">{{ data.data.temperature.unit }}</p>
             </div>
@@ -17,7 +17,7 @@
             <fa-icon [ngClass]="getIconColor('humidity', data.data.humidity.value)" [icon]="humidityIcon"
                 class="text-6xl text-white-500 mr-6"></fa-icon>
             <div>
-                <h2 class="text-2xl font-semibold">{{ data.name }}</h2>
+                <h2 class="text-2xl font-semibold">Humidity</h2>
                 <p class="text-gray-600 text-lg">{{ data.data.humidity.value }}</p>
                 <p class="text-gray-600 text-lg">{{ data.data.humidity.unit }}</p>
             </div>
@@ -30,7 +30,7 @@
             <fa-icon [ngClass]="getIconColor('brightness', data.data.brightness.value)" [icon]="brightnessIcon"
                 class="text-6xl text-white-500 mr-6"></fa-icon>
             <div>
-                <h2 class="text-2xl font-semibold">{{ data.name }}</h2>
+                <h2 class="text-2xl font-semibold">Brightness</h2>
                 <p class="text-gray-600 text-lg">{{ data.data.brightness.value }}</p>
                 <p class="text-gray-600 text-lg">{{ data.data.brightness.unit }}</p>
             </div>

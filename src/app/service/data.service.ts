@@ -13,7 +13,7 @@ export class DataService {
     private sensorData: Sensor[] = [
         {
             id: 1,
-            name: 'sensor data 1',
+            name: 'sensor 1',
             data: {
                 temperature: {
                     value: 22,
@@ -29,42 +29,6 @@ export class DataService {
                 }
             }
         }
-        // {
-        //     id: 2,
-        //     name: 'sensor data 2',
-        //     data: {
-        //         temperature: {
-        //             value: 23,
-        //             unit: 'Celsius',
-        //         },
-        //         humidity: {
-        //             value: 50,
-        //             unit: 'Percentage',
-        //         },
-        //         brightness: {
-        //             value: 350,
-        //             unit: 'Lux',
-        //         }
-        //     }
-        // },
-        // {
-        //     id: 3,
-        //     name: 'sensor data 3',
-        //     data: {
-        //         temperature: {
-        //             value: 32,
-        //             unit: 'Celsius',
-        //         },
-        //         humidity: {
-        //             value: 80,
-        //             unit: 'Percentage',
-        //         },
-        //         brightness: {
-        //             value: 450,
-        //             unit: 'Lux',
-        //         }
-        //     }
-        // }
     ];
 
     private deviceData: Device[] = [
@@ -88,24 +52,75 @@ export class DataService {
     private historyData: History[] = [
         {
             id: 1,
-            name: 'Temperature Sensor',
-            type: 'temperature',
-            value: true,
-            date: new Date()
+            name: 'sensor 1',
+            status: "ON",
+            date: new Date('2024/01/01 12:00:00')
         },
         {
             id: 2,
-            name: 'Humidity Sensor',
-            type: 'humidity',
-            value: true,
-            date: new Date()
+            name: 'sensor 1',
+            status: "ON",
+            date: new Date('2023/02/01 13:00:00')
         },
         {
             id: 3,
-            name: 'Brightness Sensor',
-            type: 'brightness',
-            value: true,
-            date: new Date()
+            name: 'sensor 1',
+            status: "ON",
+            date: new Date('2022/03/01 14:00:00')
+        },
+        {
+            id: 4,
+            name: 'sensor 1',
+            status: "OFF",
+            date: new Date('2021/04/01 15:00:00')
+        },
+        {
+            id: 5,
+            name: 'sensor 1',
+            status: "ON",
+            date: new Date('2020/05/01 16:00:00')
+        },
+        {
+            id: 6,
+            name: 'sensor 1',
+            status: "OFF",
+            date: new Date('2019/06/01 17:00:00')
+        },
+        {
+            id: 7,
+            name: 'sensor 1',
+            status: "ON",
+            date: new Date('2018/07/01 18:00:00')
+        },
+        {
+            id: 8,
+            name: 'sensor 1',
+            status: "OFF",
+            date: new Date('2017/08/01 19:00:00')
+        },
+        {
+            id: 9,
+            name: 'sensor 1',
+            status: "ON",
+            date: new Date('2016/09/01 20:00:00')
+        },
+        {
+            id: 10,
+            name: 'sensor 10',
+            status: "OFF",
+            date: new Date('2015/10/01 21:00:00')
+        },
+        {
+            id: 11,
+            name: 'sensor 11',
+            status: "ON",
+            date: new Date('2014/11/01 22:00:00')
+        },
+        {
+            id: 12,
+            name: 'sensor 12',
+            status: "OFF",
+            date: new Date('2013/12/01 23:00:00')
         }
     ];
 

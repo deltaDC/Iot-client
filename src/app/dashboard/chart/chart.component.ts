@@ -20,6 +20,9 @@ export class ChartComponent {
     humidityDatas: number[] = [];
     brightnessDatas: number[] = [];
 
+    DATA_LIMIT = 30
+    shiftCnt = 0
+
     public lineChartData: ChartData<'line'> = {
         datasets: []
     };
@@ -38,24 +41,40 @@ export class ChartComponent {
     }
 
     updateChartData(sensorDatas: Sensor[]): void {
-        const temperatureData = sensorDatas[0].data.temperature.value
-        this.temperatureDatas.push(temperatureData)
+        const temperatureData = sensorDatas[0].data.temperature.value;
+        if (this.temperatureDatas.length >= this.DATA_LIMIT) {
+            this.temperatureDatas.shift();
+            this.shiftCnt++
+        }
+        this.temperatureDatas.push(temperatureData);
 
-        const humidityData = sensorDatas[0].data.humidity.value
-        this.humidityDatas.push(humidityData)
+        const humidityData = sensorDatas[0].data.humidity.value;
+        if (this.humidityDatas.length >= this.DATA_LIMIT) {
+            this.humidityDatas.shift();
+        }
+        this.humidityDatas.push(humidityData);
 
-        const brightnessData = sensorDatas[0].data.brightness.value
-        this.brightnessDatas.push(brightnessData)
+        const brightnessData = sensorDatas[0].data.brightness.value;
+        if (this.brightnessDatas.length >= this.DATA_LIMIT) {
+            this.brightnessDatas.shift();
+        }
+        this.brightnessDatas.push(brightnessData);
+
+        const startIndex = Math.max(0, this.shiftCnt);
+        const labels = Array.from({ length: this.temperatureDatas.length }, (_, i) => (startIndex + i + 1).toString());
+
+        console.log(`Start Index: ${startIndex}`);
+        console.log(`Labels: ${labels}`);
 
         if (this.chart && this.chart.chart) {
-            this.chart.chart.data.labels = this.temperatureDatas.map((_, index) => index.toString());
+            this.chart.chart.data.labels = labels;
             this.chart.chart.data.datasets[0].data = this.temperatureDatas;
             this.chart.chart.data.datasets[1].data = this.humidityDatas;
             this.chart.chart.data.datasets[2].data = this.brightnessDatas;
             this.chart.chart.update();
         } else {
             this.lineChartData = {
-                labels: this.temperatureDatas.map((_, index) => index.toString()),
+                labels: labels,
                 datasets: [
                     {
                         data: this.temperatureDatas,

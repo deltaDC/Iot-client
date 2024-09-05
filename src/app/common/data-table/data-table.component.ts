@@ -1,24 +1,24 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService, SortEvent } from 'primeng/api';
-import { Table, TableModule } from 'primeng/table';
-import { DialogModule } from 'primeng/dialog';
-import { RippleModule } from 'primeng/ripple';
 import { ButtonModule } from 'primeng/button';
-import { ToastModule } from 'primeng/toast';
-import { ToolbarModule } from 'primeng/toolbar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { FileUploadModule } from 'primeng/fileupload';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { CommonModule } from '@angular/common';
-import { FileUploadModule } from 'primeng/fileupload';
-import { DropdownModule } from 'primeng/dropdown';
-import { TagModule } from 'primeng/tag';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { RatingModule } from 'primeng/rating';
-import { FormsModule } from '@angular/forms';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { Sensor } from '../../types/sensor.type';
+import { RippleModule } from 'primeng/ripple';
+import { Table, TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { ToastModule } from 'primeng/toast';
+import { ToolbarModule } from 'primeng/toolbar';
 import { DataService } from '../../service/data.service';
+import { Sensor } from '../../types/sensor.type';
 
 @Component({
     selector: 'app-data-table',
@@ -48,43 +48,23 @@ import { DataService } from '../../service/data.service';
     styleUrl: './data-table.component.css'
 })
 export class DataTableComponent {
-    dialog: boolean = false;
+    // dialog: boolean = false;
 
     @Input() datas!: Sensor[] | History[] | any[]
     originalDatas: Sensor[] | History[] | any[] = []
     columns: any[] = [];
     globalFilterFields: string[] = [];
 
-    data!: any;
-
-    selectedDatas!: any[] | null;
-
-    submitted: boolean = false;
-
     @ViewChild(Table) table: Table | undefined;
 
-    constructor(
-        private messageService: MessageService,
-        private confirmationService: ConfirmationService
-    ) { }
+    constructor() { }
 
     ngOnInit() {
 
         if (this.datas.length > 0) {
             this.columns = [];
-            // Object.keys(this.datas[0]).forEach(key => {
-            //     if (key === 'data') {
-            //         // Extract nested keys
-            //         Object.keys(this.datas[0][key]).forEach(nestedKey => {
-            //             this.columns.push({ field: nestedKey, header: this.capitalizeFirstLetter(nestedKey) });
-            //         });
-            //     } else {
-            //         this.columns.push({ field: key, header: this.capitalizeFirstLetter(key) });
-            //     }
-            // });
             Object.keys(this.datas[0]).forEach(key => {
                 if (key === 'data') {
-                    // Extract nested keys
                     Object.keys(this.datas[0][key]).forEach(nestedKey => {
                         this.columns.push({ field: `data.${nestedKey}.value`, header: this.capitalizeFirstLetter(nestedKey) });
                     });
@@ -110,168 +90,77 @@ export class DataTableComponent {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    openNew() {
-        this.data = {};
-        this.submitted = false;
-        this.dialog = true;
+    applyFilterGlobal($event: any, stringVal: any) {
+        this.table!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
     }
 
-    deleteSelectedProducts() {
-        this.confirmationService.confirm({
-            message: 'Are you sure you want to delete the selected datas?',
-            header: 'Confirm',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                this.datas = this.datas.filter((val) => !this.selectedDatas?.includes(val));
-                this.selectedDatas = null;
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-            }
-        });
-    }
+    // getUniqueValues(field: string): any[] {
+    //     const values = this.datas.map(item => item[field]);
+    //     return Array.from(new Set(values)).map(value => ({ label: value, value }));
+    // }
 
-    editData(data: any) {
-        this.data = { ...data };
-        this.dialog = true;
-    }
+    // getDropdownOptions(field: string) {
+    //     if (field === 'unit' || field === 'type') {
+    //         return this.getUniqueValues(field);
+    //     }
+    //     return [];
+    // }
 
-    deleteData(data: any) {
-        this.confirmationService.confirm({
-            message: 'Are you sure you want to delete ' + data.name + '?',
-            header: 'Confirm',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                this.datas = this.datas.filter((val) => val.id !== data.id);
-                this.data = {};
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'any Deleted', life: 3000 });
-            }
-        });
-    }
+    // onFilterChange(event: any) {
+    //     console.log("Filter changed");
+    //     console.log("Event:", event);
+    //     console.log("Datas", this.datas)
+    //     console.log("Original Datas", this.originalDatas);
 
-    hideDialog() {
-        this.dialog = false;
-        this.submitted = false;
-    }
+    //     if (event.value === null || event.value === '') {
+    //         this.datas = [...this.originalDatas];
+    //         return;
+    //     }
 
-    saveProduct() {
-        this.submitted = true;
+    //     this.datas = this.originalDatas.filter((item: any) =>
+    //         item.unit === event.value || item.type === event.value
+    //     );
 
-        if (this.data.name?.trim()) {
-            if (this.data.id) {
-                this.datas[this.findIndexById(this.data.id)] = this.data;
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'any Updated', life: 3000 });
-            } else {
-                this.data.id = this.createId();
-                this.data.image = 'data-placeholder.svg';
-                this.datas.push(this.data);
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'any Created', life: 3000 });
-            }
+    //     console.log("Filtered Datas:", this.datas);
+    // }
 
-            this.datas = [...this.datas];
-            this.dialog = false;
-            this.data = {};
-        }
-    }
+    // customSort(event: any) {
+    //     console.log("on custom sort");
+    //     event.data.sort((data1: any, data2: any) => {
+    //         let value1 = this.resolveFieldData(data1, event.field);
+    //         let value2 = this.resolveFieldData(data2, event.field);
+    //         let result = null;
 
-    findIndexById(id: string): number {
-        let index = -1;
-        for (let i = 0; i < this.datas.length; i++) {
-            if (this.datas[i].id === id) {
-                index = i;
-                break;
-            }
-        }
+    //         if (value1 == null && value2 != null)
+    //             result = -1;
+    //         else if (value1 != null && value2 == null)
+    //             result = 1;
+    //         else if (value1 == null && value2 == null)
+    //             result = 0;
+    //         else if (typeof value1 === 'string' && typeof value2 === 'string')
+    //             result = value1.localeCompare(value2);
+    //         else
+    //             result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
 
-        return index;
-    }
+    //         return (event.order * result);
+    //     });
+    // }
 
-    createId(): string {
-        let id = '';
-        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (var i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    }
-
-    getSeverity(status: string) {
-        switch (status) {
-            case 'INSTOCK':
-                return 'success';
-            case 'LOWSTOCK':
-                return 'warning';
-            case 'OUTOFSTOCK':
-                return 'danger';
-        }
-        return 'success';
-    }
-
-    getUniqueValues(field: string): any[] {
-        const values = this.datas.map(item => item[field]);
-        return Array.from(new Set(values)).map(value => ({ label: value, value }));
-    }
-
-    getDropdownOptions(field: string) {
-        if (field === 'unit' || field === 'type') {
-            return this.getUniqueValues(field);
-        }
-        return [];
-    }
-
-    onFilterChange(event: any) {
-        console.log("Filter changed");
-        console.log("Event:", event);
-        console.log("Datas", this.datas)
-        console.log("Original Datas", this.originalDatas);
-
-        if (event.value === null || event.value === '') {
-            this.datas = [...this.originalDatas];
-            return;
-        }
-
-        this.datas = this.originalDatas.filter((item: any) =>
-            item.unit === event.value || item.type === event.value
-        );
-
-        console.log("Filtered Datas:", this.datas);
-    }
-
-    customSort(event: any) {
-        console.log("on custom sort");
-        event.data.sort((data1: any, data2: any) => {
-            let value1 = this.resolveFieldData(data1, event.field);
-            let value2 = this.resolveFieldData(data2, event.field);
-            let result = null;
-
-            if (value1 == null && value2 != null)
-                result = -1;
-            else if (value1 != null && value2 == null)
-                result = 1;
-            else if (value1 == null && value2 == null)
-                result = 0;
-            else if (typeof value1 === 'string' && typeof value2 === 'string')
-                result = value1.localeCompare(value2);
-            else
-                result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
-
-            return (event.order * result);
-        });
-    }
-
-    resolveFieldData(data: any, field: string): any {
-        if (data && field) {
-            let fields: string[] = field.split('.');
-            let value = data;
-            for (let i = 0; i < fields.length; i++) {
-                if (value == null) {
-                    return null;
-                }
-                value = value[fields[i]];
-            }
-            return value;
-        } else {
-            return null;
-        }
-    }
+    // resolveFieldData(data: any, field: string): any {
+    //     if (data && field) {
+    //         let fields: string[] = field.split('.');
+    //         let value = data;
+    //         for (let i = 0; i < fields.length; i++) {
+    //             if (value == null) {
+    //                 return null;
+    //             }
+    //             value = value[fields[i]];
+    //         }
+    //         return value;
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
     getRowDataValue(columnField: any, rowData: string): any {
         if (columnField.includes('.')) {
