@@ -7,6 +7,7 @@ export interface Sensor {
         temperature: Data
         humidity: Data
         brightness: Data
-    }
+    },
+    date: string
     icon?: string;
 }

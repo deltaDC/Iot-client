@@ -13,7 +13,7 @@ export class DataService {
     private sensorData: Sensor[] = [
         {
             id: 1,
-            name: 'sensor 1',
+            name: 'Led Switch 1',
             data: {
                 temperature: {
                     value: 22,
@@ -27,7 +27,8 @@ export class DataService {
                     value: 300,
                     unit: 'Lux',
                 }
-            }
+            },
+            date: "2024/01/01 12:00:00"
         }
     ];
 
@@ -52,73 +53,73 @@ export class DataService {
     private historyData: History[] = [
         {
             id: 1,
-            name: 'sensor 1',
+            name: 'Led Switch 1',
             status: "ON",
             date: new Date('2024/01/01 12:00:00')
         },
         {
             id: 2,
-            name: 'sensor 1',
+            name: 'Led Switch 1',
             status: "ON",
             date: new Date('2023/02/01 13:00:00')
         },
         {
             id: 3,
-            name: 'sensor 1',
+            name: 'Led Switch 1',
             status: "ON",
             date: new Date('2022/03/01 14:00:00')
         },
         {
             id: 4,
-            name: 'sensor 1',
+            name: 'Led Switch 1',
             status: "OFF",
             date: new Date('2021/04/01 15:00:00')
         },
         {
             id: 5,
-            name: 'sensor 1',
+            name: 'Led Switch 1',
             status: "ON",
             date: new Date('2020/05/01 16:00:00')
         },
         {
             id: 6,
-            name: 'sensor 1',
+            name: 'Led Switch 1',
             status: "OFF",
             date: new Date('2019/06/01 17:00:00')
         },
         {
             id: 7,
-            name: 'sensor 1',
+            name: 'Led Switch 1',
             status: "ON",
             date: new Date('2018/07/01 18:00:00')
         },
         {
             id: 8,
-            name: 'sensor 1',
+            name: 'Led Switch 1',
             status: "OFF",
             date: new Date('2017/08/01 19:00:00')
         },
         {
             id: 9,
-            name: 'sensor 1',
+            name: 'Led Switch 1',
             status: "ON",
             date: new Date('2016/09/01 20:00:00')
         },
         {
             id: 10,
-            name: 'sensor 10',
+            name: 'Led Switch 10',
             status: "OFF",
             date: new Date('2015/10/01 21:00:00')
         },
         {
             id: 11,
-            name: 'sensor 11',
+            name: 'Led Switch 11',
             status: "ON",
             date: new Date('2014/11/01 22:00:00')
         },
         {
             id: 12,
-            name: 'sensor 12',
+            name: 'Led Switch 12',
             status: "OFF",
             date: new Date('2013/12/01 23:00:00')
         }
