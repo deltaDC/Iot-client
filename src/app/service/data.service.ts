@@ -4,11 +4,17 @@ import { Device } from '../types/device.type';
 import { Sensor } from '../types/sensor.type';
 import { History } from '../types/history.type';
 import { Data } from '../types/sensor-data.type';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { API_CONFIG } from '../../api/api.config';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DataService {
+
+    baseUrl: string = API_CONFIG.BASE_URL;
+
+    constructor(private http: HttpClient) { }
 
     private sensorData: Sensor[] = [
         {
@@ -129,8 +135,13 @@ export class DataService {
     private deviceDataSubject = new BehaviorSubject<Device[]>(this.deviceData);
     private historyDataSubject = new BehaviorSubject<History[]>(this.historyData);
 
-    getSensorData(): Observable<Sensor[]> {
-        return this.sensorDataSubject.asObservable();
+    getSensorData(params: { [key: string]: string | number }) {
+        let httpParams = new HttpParams();
+        Object.keys(params).forEach(key => {
+            httpParams = httpParams.set(key, params[key].toString());
+        });
+
+        return this.http.get(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.SENSORS}`, { params: httpParams });
     }
 
     getDeviceData(): Observable<Device[]> {
@@ -141,29 +152,29 @@ export class DataService {
         return this.historyDataSubject.asObservable();
     }
 
-    getRandomValue(name: string): Data {
-        switch (name) {
-            case 'temperature':
-                return { value: Math.floor(Math.random() * 35), unit: 'Celsius' };
-            case 'humidity':
-                return { value: Math.floor(Math.random() * 100), unit: 'Percentage' };
-            case 'brightness':
-                return { value: Math.floor(Math.random() * 500), unit: 'Lux' };
-            default:
-                return { value: 0, unit: '' };
-        }
-    }
+    // getRandomValue(name: string): Data {
+    //     switch (name) {
+    //         case 'temperature':
+    //             return { value: Math.floor(Math.random() * 35), unit: 'Celsius' };
+    //         case 'humidity':
+    //             return { value: Math.floor(Math.random() * 100), unit: 'Percentage' };
+    //         case 'brightness':
+    //             return { value: Math.floor(Math.random() * 500), unit: 'Lux' };
+    //         default:
+    //             return { value: 0, unit: '' };
+    //     }
+    // }
 
-    updateSensorValues(): void {
-        this.sensorData = this.sensorData.map(sensor => ({
-            ...sensor,
-            data: {
-                temperature: this.getRandomValue('temperature'),
-                humidity: this.getRandomValue('humidity'),
-                brightness: this.getRandomValue('brightness'),
-            },
-            id: Math.floor(Math.random() * (100 - 4 + 1)) + 4
-        }));
-        this.sensorDataSubject.next(this.sensorData);
-    }
+    // updateSensorValues(): void {
+    //     this.sensorData = this.sensorData.map(sensor => ({
+    //         ...sensor,
+    //         data: {
+    //             temperature: this.getRandomValue('temperature'),
+    //             humidity: this.getRandomValue('humidity'),
+    //             brightness: this.getRandomValue('brightness'),
+    //         },
+    //         id: Math.floor(Math.random() * (100 - 4 + 1)) + 4
+    //     }));
+    //     this.sensorDataSubject.next(this.sensorData);
+    // }
 }

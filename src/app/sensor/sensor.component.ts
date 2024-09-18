@@ -32,9 +32,9 @@ export class SensorComponent {
             if (this.sensorData.length < 20) this.sensorData.push(...newData);
         });
 
-        this.intervalId = setInterval(() => {
-            this.updateSensorValues();
-        }, 1000);
+        // this.intervalId = setInterval(() => {
+        //     this.updateSensorValues();
+        // }, 1000);
 
     }
 
@@ -47,7 +47,7 @@ export class SensorComponent {
         }
     }
 
-    updateSensorValues(): void {
-        this.dataService.updateSensorValues()
-    }
+    // updateSensorValues(): void {
+    //     this.dataService.updateSensorValues()
+    // }
 }

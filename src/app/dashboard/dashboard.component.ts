@@ -34,9 +34,9 @@ export class DashboardComponent {
             this.deviceDatas = data;
         })
 
-        this.intervalId = setInterval(() => {
-            this.updateSensorValues();
-        }, 1000);
+        // this.intervalId = setInterval(() => {
+        //     this.updateSensorValues();
+        // }, 1000);
     }
 
     ngOnDestroy(): void {
@@ -51,8 +51,8 @@ export class DashboardComponent {
         }
     }
 
-    updateSensorValues(): void {
-        this.dataService.updateSensorValues()
-    }
+    // updateSensorValues(): void {
+    //     this.dataService.updateSensorValues()
+    // }
 
 }
