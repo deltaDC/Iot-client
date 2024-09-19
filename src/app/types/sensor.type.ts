@@ -2,7 +2,7 @@ import { Data } from "./sensor-data.type";
 
 export interface Sensor {
     id: number;
-    name: string;
+    name?: string;
     data: {
         temperature: Data
         humidity: Data

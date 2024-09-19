@@ -6,6 +6,8 @@ import { FilterComponent } from "../common/filter/filter.component";
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { DataTableComponent } from "../common/data-table/data-table.component";
+import { HttpClientModule } from '@angular/common/http';
+import { SensorTableComponent } from "./sensor-table/sensor-table.component";
 
 
 @Component({
@@ -15,39 +17,40 @@ import { DataTableComponent } from "../common/data-table/data-table.component";
         FilterComponent,
         TableModule,
         CommonModule,
-        DataTableComponent
+        DataTableComponent,
+        SensorTableComponent
     ],
     templateUrl: './sensor.component.html',
     styleUrl: './sensor.component.css'
 })
 export class SensorComponent {
+
     constructor(private dataService: DataService) { }
 
-    intervalId: any
     sub: Subscription | undefined;
     sensorData: Sensor[] = [];
+    totalElements: number = 0;
+    totalPages: number = 0;
 
     ngOnInit(): void {
-        this.dataService.getSensorData().subscribe(newData => {
-            if (this.sensorData.length < 20) this.sensorData.push(...newData);
+        this.sub = this.dataService.getSensorData().subscribe(newData => {
+            console.log('Received Sensor Data:', newData.response);
+            this.totalElements = newData.response.totalElements;
+            this.totalPages = newData.response.totalPages;
+            this.sensorData = newData.response.content.map((item: any) => ({
+                id: item.id,
+                createdAt: item.createdAt,
+                data: JSON.parse(item.data),
+                icon: item.icon
+            }));
+
+            console.log('Parsed Sensor Data:', this.sensorData);
         });
-
-        // this.intervalId = setInterval(() => {
-        //     this.updateSensorValues();
-        // }, 1000);
-
     }
 
     ngOnDestroy(): void {
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-        }
         if (this.sub) {
             this.sub.unsubscribe();
         }
     }
-
-    // updateSensorValues(): void {
-    //     this.dataService.updateSensorValues()
-    // }
 }

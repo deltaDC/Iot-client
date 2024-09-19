@@ -27,12 +27,12 @@ export class HistoryComponent {
     }
 
     ngOnInit(): void {
-        this.dataService.getHistoryData().subscribe(data => {
-            this.historyData = data.map(item => ({
-                ...item,
-                date: this.formatDate(new Date(item.date))
-            }));
-        });
+        // this.dataService.getHistoryData().subscribe(data => {
+        //     this.historyData = data.map(item => ({
+        //         ...item,
+        //         date: this.formatDate(new Date(item.date))
+        //     }));
+        // });
     }
 
     formatDate(date: Date): string {

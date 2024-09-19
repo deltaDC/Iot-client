@@ -48,7 +48,6 @@ import { Sensor } from '../../types/sensor.type';
     styleUrl: './data-table.component.css'
 })
 export class DataTableComponent {
-    // dialog: boolean = false;
 
     @Input() datas!: Sensor[] | History[] | any[]
     originalDatas: Sensor[] | History[] | any[] = []
@@ -60,6 +59,8 @@ export class DataTableComponent {
     constructor() { }
 
     ngOnInit() {
+
+        console.log("data from data table", this.datas)
 
         if (this.datas.length > 0) {
             this.columns = [];
@@ -75,15 +76,13 @@ export class DataTableComponent {
             this.globalFilterFields = this.columns.map(column => column.field);
         }
         console.log('Columns:', this.columns);
+    }
 
-        setInterval(() => {
-            if (this.datas.length > this.originalDatas.length) {
-                this.originalDatas = [...this.datas];
-                if (this.table) {
-                    this.table.reset();
-                }
-            }
-        }, 2000);
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['datas'] && changes['datas'].currentValue) {
+            // Handle the updated sensorData here
+            console.log('Received sensor data in child component:', this.datas);
+        }
     }
 
     capitalizeFirstLetter(string: string) {

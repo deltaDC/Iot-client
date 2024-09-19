@@ -26,13 +26,13 @@ export class DashboardComponent {
     constructor(private dataService: DataService) { }
 
     ngOnInit(): void {
-        this.sensorSubscription = this.dataService.getSensorData().subscribe(data => {
-            this.sensorDatas = data;
-        });
+        // this.sensorSubscription = this.dataService.getSensorData().subscribe(data => {
+        //     this.sensorDatas = data;
+        // });
 
-        this.deviceSubscription = this.dataService.getDeviceData().subscribe(data => {
-            this.deviceDatas = data;
-        })
+        // this.deviceSubscription = this.dataService.getDeviceData().subscribe(data => {
+        //     this.deviceDatas = data;
+        // })
 
         // this.intervalId = setInterval(() => {
         //     this.updateSensorValues();
