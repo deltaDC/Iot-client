@@ -1,6 +1,11 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { Table, TableModule } from 'primeng/table';
+import { DataService } from '../../service/data.service';
+import { BaseResponse } from '../../types/baseresponse.type';
+import { History } from '../../types/history.type';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
@@ -12,17 +17,12 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { RatingModule } from 'primeng/rating';
 import { RippleModule } from 'primeng/ripple';
-import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
-import { Sensor } from '../../types/sensor.type';
-import { MessageService, ConfirmationService } from 'primeng/api';
-import { BaseResponse } from '../../types/baseresponse.type';
-import { DataService } from '../../service/data.service';
 
 @Component({
-    selector: 'app-sensor-table',
+    selector: 'app-history-table',
     standalone: true,
     imports: [
         TableModule,
@@ -44,24 +44,16 @@ import { DataService } from '../../service/data.service';
         FormsModule,
         InputNumberModule
     ],
-    templateUrl: './sensor-table.component.html',
-    styleUrl: './sensor-table.component.css',
-    providers: [MessageService, ConfirmationService],
+    templateUrl: './history-table.component.html',
+    styleUrl: './history-table.component.css',
+    providers: [MessageService, ConfirmationService]
 })
-export class SensorTableComponent {
-    @Input() datas!: Sensor[]
+export class HistoryTableComponent {
+    @Input() datas!: History[]
     @Input() totalElements!: number;
     @Input() totalPages!: number;
     columns: any[] = [];
     globalFilterFields: string[] = [];
-    filteredColumns = [...this.columns];
-    filterOptions = [
-        { label: 'All', value: 'all' },
-        { label: 'Temperature', value: 'temperature' },
-        { label: 'Humidity', value: 'humidity' },
-        { label: 'Brightness', value: 'brightness' }
-    ];
-    selectedFilter = 'all';
 
     rows: number = 10;
 
@@ -70,10 +62,8 @@ export class SensorTableComponent {
     constructor(private dataService: DataService) { }
 
     ngOnInit() {
-        this.columns = ["Id", "Temperature", "Humidity", "Brightness", "CreatedAt"]
+        this.columns = ["Id", "Device Name", "Status", "CreatedAt"]
         this.globalFilterFields = [...this.columns];
-        this.filteredColumns = [...this.columns];
-        console.log(this.filteredColumns)
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -100,33 +90,37 @@ export class SensorTableComponent {
 
     getRowDataValue(column: string, rowData: any): any {
         const lowerCaseColumn = column.toLowerCase();
-        if (lowerCaseColumn === 'id') {
-            return rowData[lowerCaseColumn];
-        } else if (rowData.data && rowData.data[lowerCaseColumn]) {
-            return `${rowData.data[lowerCaseColumn].value} ${rowData.data[lowerCaseColumn].unit}`;
-        } else if (lowerCaseColumn === 'createdat') {
-            return rowData["createdAt"];
+        switch (lowerCaseColumn) {
+            case 'id':
+                return rowData.id;
+            case 'device name':
+                return rowData.deviceName;
+            case 'status':
+                return rowData.status;
+            case 'createdat':
+                return rowData.createdAt;
+            default:
+                return null
         }
-        return null;
     }
 
     onFilterChange(event: any, column: string): void {
         console.log("triggered filter change");
         const filterValue = event.target.value;
         console.log('Filter value:', filterValue);
+        console.log('Column:', column);
 
         // Adjust the column name if it is 'createdat'
-        const adjustedColumn = column.toLowerCase() === 'createdat' ? 'createdAt' : column.toLowerCase();
-        const params = { [adjustedColumn]: filterValue };
+        let adjustedColumn = column.toLowerCase() === 'createdat' ? 'createdAt' : column.toLowerCase();
+        if (column === 'Device Name') adjustedColumn = "deviceName"
+        if (column === 'Status') adjustedColumn = "status"
 
-        this.dataService.getSensorData(params).subscribe((response: BaseResponse) => {
+        const params = { [adjustedColumn]: filterValue };
+        console.log("params is:", params)
+
+        this.dataService.getHistoryData(params).subscribe((response: BaseResponse) => {
             console.log("Filtered data:", response);
-            this.datas = response.response.content.map((item: any) => ({
-                id: item.id,
-                createdAt: item.createdAt,
-                data: JSON.parse(item.data),
-                icon: item.icon
-            }));
+            this.datas = response.response.content
             this.totalElements = response.response.totalElements;
         });
     }
@@ -138,17 +132,14 @@ export class SensorTableComponent {
         console.log('Sort order:', sortOrder);
 
         // Adjust the column name if it is 'createdat'
-        const adjustedSortField = sortField.toLowerCase() === 'createdat' ? 'createdAt' : sortField.toLowerCase();
+        let adjustedSortField = sortField.toLowerCase() === 'createdat' ? 'createdAt' : sortField.toLowerCase();
+        if (sortField === 'Device Name') adjustedSortField = "deviceName"
+
         const params = { sortBy: adjustedSortField, sortDirection: sortOrder };
 
-        this.dataService.getSensorData(params).subscribe((response: BaseResponse) => {
+        this.dataService.getHistoryData(params).subscribe((response: BaseResponse) => {
             console.log("Sorted data:", response);
-            this.datas = response.response.content.map((item: any) => ({
-                id: item.id,
-                createdAt: item.createdAt,
-                data: JSON.parse(item.data),
-                icon: item.icon
-            }));
+            this.datas = response.response.content;
         });
     }
 
@@ -167,7 +158,8 @@ export class SensorTableComponent {
         const page = event.first / event.rows;
         const pageSize = event.rows;
         this.rows = event.rows;
-        const sortField = event.sortField || '';
+        let sortField = event.sortField || '';
+        if (sortField === "Device Name") sortField = "deviceName"
         const sortOrder = event.sortOrder === 1 ? 'ASC' : 'DESC';
 
         const params = {
@@ -179,13 +171,9 @@ export class SensorTableComponent {
 
         console.log(params);
 
-        this.dataService.getSensorData(params).subscribe((response: BaseResponse) => {
+        this.dataService.getHistoryData(params).subscribe((response: BaseResponse) => {
             console.log("Paged data:", response);
-            this.datas = response.response.content.map((item: any) => ({
-                id: item.id,
-                createdAt: item.createdAt,
-                data: JSON.parse(item.data),
-            }));
+            this.datas = response.response.content
             this.totalElements = response.response.totalElements;
         });
     }
@@ -195,18 +183,5 @@ export class SensorTableComponent {
         this.rows = event.rows;
         console.log("row after event", this.rows);
         // this.loadData(event);
-    }
-
-    onColumnFilterChange(event: any) {
-        const filter = event.value;
-        if (filter === 'all') {
-            this.filteredColumns = [...this.columns];
-        } else if (filter === 'temperature') {
-            this.filteredColumns = ['id', 'temperature', 'createdat'];
-        } else if (filter === 'humidity') {
-            this.filteredColumns = ['id', 'humidity', 'createdat'];
-        } else if (filter === 'brightness') {
-            this.filteredColumns = ['id', 'brightness', 'createdat'];
-        }
     }
 }

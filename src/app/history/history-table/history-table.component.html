@@ -3,12 +3,6 @@
 <div class="card">
     <p-toast />
 
-    <div class="filter-dropdown m-8">
-        <label for="columnFilter">Filter Columns: </label>
-        <p-dropdown [options]="filterOptions" [(ngModel)]="selectedFilter"
-            (onChange)="onColumnFilterChange($event)"></p-dropdown>
-    </div>
-
     <p-table #dt [value]="datas" [rows]="rows" [paginator]="true" [rowsPerPageOptions]="[5, 10, 25, 50]"
         [responsive]="true" [globalFilterFields]="globalFilterFields" [tableStyle]="{ 'min-width': '75rem' }"
         [rowHover]="true" dataKey="id" [showCurrentPageReport]="true" (onSort)="onSort($event)" [customSort]="true"
@@ -27,19 +21,18 @@
                 <th style="width: 4rem">
                     <!-- <p-tableHeaderCheckbox /> -->
                 </th>
-                <th *ngFor="let column of filteredColumns" [pSortableColumn]="column"
+                <th *ngFor="let column of columns" [pSortableColumn]="column"
                     [style.min-width]="column.minWidth || 'auto'">
-                    {{ column |uppercase }} <p-sortIcon [field]="column" />
+                    {{ column | uppercase }} <p-sortIcon [field]="column" />
                 </th>
                 <th></th>
             </tr>
             <tr>
                 <th></th>
-                <th *ngFor="let column of filteredColumns">
+                <th *ngFor="let column of columns">
                     <input type="text" [placeholder]="'Search by ' + column"
                         (keydown.enter)="onFilterChange($event, column)"
                         class="p-inputtext p-component p-column-filter" />
-
                 </th>
                 <th></th>
             </tr>
@@ -49,7 +42,7 @@
             <tr>
                 <td>
                 </td>
-                <td *ngFor="let column of filteredColumns">
+                <td *ngFor="let column of columns">
                     {{getRowDataValue(column, rowData)}}
                 </td>
             </tr>

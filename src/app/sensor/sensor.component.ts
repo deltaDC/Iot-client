@@ -6,7 +6,6 @@ import { FilterComponent } from "../common/filter/filter.component";
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { DataTableComponent } from "../common/data-table/data-table.component";
-import { HttpClientModule } from '@angular/common/http';
 import { SensorTableComponent } from "./sensor-table/sensor-table.component";
 
 

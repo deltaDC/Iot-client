@@ -5,6 +5,8 @@ import { DataService } from '../service/data.service';
 import { History } from '../types/history.type';
 import { FilterComponent } from "../common/filter/filter.component";
 import { DataTableComponent } from "../common/data-table/data-table.component";
+import { HistoryTableComponent } from "./history-table/history-table.component";
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-history',
@@ -13,7 +15,8 @@ import { DataTableComponent } from "../common/data-table/data-table.component";
         MatTableModule,
         MatPaginatorModule,
         FilterComponent,
-        DataTableComponent
+        DataTableComponent,
+        HistoryTableComponent
     ],
     templateUrl: './history.component.html',
     styleUrl: './history.component.css'
@@ -22,17 +25,21 @@ export class HistoryComponent {
     constructor(private dataService: DataService) { }
 
     historyData: History[] = [];
+    sub: Subscription | undefined;
+    totalElements: number = 0;
+    totalPages: number = 0;
 
     ngAfterViewInit() {
     }
 
     ngOnInit(): void {
-        // this.dataService.getHistoryData().subscribe(data => {
-        //     this.historyData = data.map(item => ({
-        //         ...item,
-        //         date: this.formatDate(new Date(item.date))
-        //     }));
-        // });
+        this.sub = this.dataService.getHistoryData().subscribe(newData => {
+            console.log('Received History Data:', newData.response);
+            this.totalElements = newData.response.totalElements;
+            this.totalPages = newData.response.totalPages;
+            this.historyData = newData.response.content
+            console.log('Parsed History Data:', this.historyData);
+        });
     }
 
     formatDate(date: Date): string {

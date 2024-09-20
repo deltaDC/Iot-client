@@ -24,11 +24,18 @@ export class DataService {
         return this.http.get<BaseResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.SENSOR_LIST}`, { params: httpParams });
     }
 
-    getDeviceData() {
-        // return this.deviceDataSubject.asObservable();
+    getHistoryData(params?: { [key: string]: string | number }): Observable<BaseResponse> {
+        let httpParams = new HttpParams();
+        if (params) {
+            Object.keys(params).forEach(key => {
+                httpParams = httpParams.set(key, params[key].toString());
+            });
+        }
+
+        return this.http.get<BaseResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.HISTORY_LIST}`, { params: httpParams });
     }
 
-    getHistoryData() {
-        // return this.historyDataSubject.asObservable();
+    getDeviceData() {
+        // return this.deviceDataSubject.asObservable();
     }
 }
