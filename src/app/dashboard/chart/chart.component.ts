@@ -13,7 +13,7 @@ Chart.register(...registerables);
     styleUrl: './chart.component.css'
 })
 export class ChartComponent {
-    @Input() sensorDatas: Sensor[] = [];
+    @Input() sensorData!: Sensor;
     @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
     temperatureDatas: number[] = [];
@@ -31,30 +31,30 @@ export class ChartComponent {
     };
 
     ngOnInit(): void {
-        this.updateChartData(this.sensorDatas);
+        this.updateChartData(this.sensorData);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['sensorDatas']) {
-            this.updateChartData(changes['sensorDatas'].currentValue);
+        if (changes['sensorData']) {
+            this.updateChartData(changes['sensorData'].currentValue);
         }
     }
 
-    updateChartData(sensorDatas: Sensor[]): void {
-        const temperatureData = sensorDatas[0].data.temperature.value;
+    updateChartData(sensorData: Sensor): void {
+        const temperatureData = sensorData.data.temperature.value;
         if (this.temperatureDatas.length >= this.DATA_LIMIT) {
             this.temperatureDatas.shift();
             this.shiftCnt++
         }
         this.temperatureDatas.push(temperatureData);
 
-        const humidityData = sensorDatas[0].data.humidity.value;
+        const humidityData = sensorData.data.humidity.value;
         if (this.humidityDatas.length >= this.DATA_LIMIT) {
             this.humidityDatas.shift();
         }
         this.humidityDatas.push(humidityData);
 
-        const brightnessData = sensorDatas[0].data.brightness.value;
+        const brightnessData = sensorData.data.brightness.value;
         if (this.brightnessDatas.length >= this.DATA_LIMIT) {
             this.brightnessDatas.shift();
         }

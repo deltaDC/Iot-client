@@ -17,7 +17,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export class DashboardComponent {
 
-    sensorDatas: Sensor[] = [];
+    sensorData!: Sensor;
     deviceDatas: Device[] = [];
     intervalId: any;
     private sensorSubscription: Subscription | undefined;
@@ -26,17 +26,28 @@ export class DashboardComponent {
     constructor(private dataService: DataService) { }
 
     ngOnInit(): void {
-        // this.sensorSubscription = this.dataService.getSensorData().subscribe(data => {
-        //     this.sensorDatas = data;
-        // });
+        this.sensorSubscription = this.dataService.getLatestSensorData().subscribe(data => {
+            // this.sensorData = data;
+            console.log("data is ", data.response);
+            const parseData = {
+                id: data.response.id,
+                createdAt: data.response.createdAt,
+                data: JSON.parse(data.response.data),
+                date: data.response.createdAt
+            };
+            this.sensorData = parseData;
+            console.log("sensorData is ", this.sensorData)
+        });
 
-        // this.deviceSubscription = this.dataService.getDeviceData().subscribe(data => {
-        //     this.deviceDatas = data;
-        // })
+        this.deviceSubscription = this.dataService.getDeviceData().subscribe(data => {
+            console.log("device data is ", data)
+            this.deviceDatas = data.response
+            console.log("device data is ", this.deviceDatas)
+        })
 
         // this.intervalId = setInterval(() => {
         //     this.updateSensorValues();
-        // }, 1000);
+        // }, 5000);
     }
 
     ngOnDestroy(): void {
@@ -51,8 +62,19 @@ export class DashboardComponent {
         }
     }
 
-    // updateSensorValues(): void {
-    //     this.dataService.updateSensorValues()
-    // }
+    updateSensorValues() {
+        this.dataService.getLatestSensorData().subscribe(data => {
+            // this.sensorData = data;
+            console.log("data is ", data.response);
+            const parseData = {
+                id: data.response.id,
+                createdAt: data.response.createdAt,
+                data: JSON.parse(data.response.data),
+                date: data.response.createdAt
+            };
+            this.sensorData = parseData;
+            console.log("sensorData is ", this.sensorData)
+        });
+    }
 
 }

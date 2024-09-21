@@ -23,6 +23,14 @@ import { faSun } from '@fortawesome/free-solid-svg-icons';
 export class CardComponent {
     @Input() data!: Sensor;
 
+    ngOnInit() {
+        console.log("Card data from father is", this.data)
+    }
+
+    ngOnChanges() {
+        console.log("Card data from father is", this.data)
+    }
+
     tempIcon = faTemperatureThreeQuarters;
     humidityIcon = faDroplet;
     brightnessIcon = faSun;

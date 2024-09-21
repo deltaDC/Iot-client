@@ -24,6 +24,10 @@ export class DataService {
         return this.http.get<BaseResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.SENSOR_LIST}`, { params: httpParams });
     }
 
+    getLatestSensorData(): Observable<BaseResponse> {
+        return this.http.get<BaseResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.SENSOR_LATEST}`);
+    }
+
     getHistoryData(params?: { [key: string]: string | number }): Observable<BaseResponse> {
         let httpParams = new HttpParams();
         if (params) {
@@ -36,6 +40,6 @@ export class DataService {
     }
 
     getDeviceData() {
-        // return this.deviceDataSubject.asObservable();
+        return this.http.get<BaseResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.DEVICE_LIST}`);
     }
 }

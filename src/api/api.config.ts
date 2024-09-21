@@ -5,6 +5,8 @@ export const API_CONFIG = {
         DEVICES: 'device',
         HISTORY: 'history',
         SENSOR_LIST: 'sensor/list',
-        HISTORY_LIST: 'history/list'
+        SENSOR_LATEST: 'sensor/latest',
+        HISTORY_LIST: 'history/list',
+        DEVICE_LIST: 'device/list',
     }
 };
