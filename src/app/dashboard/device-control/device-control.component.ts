@@ -28,6 +28,12 @@ export class DeviceControlComponent {
     faLightbulb = faLightbulbSolid;
     faLightbulbRegular = faLightbulbRegular;
 
+    ngOnInit() {
+        console.log("Device data from father is", this.data)
+        this.isLightbulbOn = this.data.status === "ON";
+        this.checked = this.data.status === "ON";
+    }
+
     toggleLightbulb() {
         console.log('Lightbulb toggled');
         console.log(this.data)

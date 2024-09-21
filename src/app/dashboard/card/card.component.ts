@@ -42,7 +42,7 @@ export class CardComponent {
             case 'humidity':
                 return value < 30 ? 'text-gray-500' : value < 70 ? 'text-blue-500' : 'text-blue-700';
             case 'brightness':
-                return value < 100 ? 'text-gray-700' : value < 300 ? 'text-gray-500' : 'text-yellow-500';
+                return value < 100 ? 'text-gray-700' : value < 500 ? 'text-gray-500' : 'text-yellow-500';
             default:
                 return 'text-gray-500';
         }
