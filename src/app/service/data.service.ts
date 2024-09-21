@@ -42,4 +42,8 @@ export class DataService {
     getDeviceData() {
         return this.http.get<BaseResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.DEVICE_LIST}`);
     }
+
+    toggleDevice(request: { deviceId: number, status: String }): Observable<BaseResponse> {
+        return this.http.post<BaseResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.DEVICE_TOGGLE}`, request);
+    }
 }

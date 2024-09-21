@@ -62,6 +62,7 @@ export class SensorTableComponent {
         { label: 'Brightness', value: 'brightness' }
     ];
     selectedFilter = 'all';
+    intervalId: any
 
     rows: number = 10;
 
@@ -74,6 +75,10 @@ export class SensorTableComponent {
         this.globalFilterFields = [...this.columns];
         this.filteredColumns = [...this.columns];
         console.log(this.filteredColumns)
+
+        // this.intervalId = setInterval(() => {
+        //     this.updateSensorValues();
+        // }, 5000);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -90,8 +95,10 @@ export class SensorTableComponent {
         // }
     }
 
-    ngAfterViewInit() {
-        // console.log('Total pages:', this.getTotalPages());
+    ngOnDestroy(): void {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+        }
     }
 
     applyFilterGlobal($event: any, stringVal: any) {
@@ -208,5 +215,24 @@ export class SensorTableComponent {
         } else if (filter === 'brightness') {
             this.filteredColumns = ['id', 'brightness', 'createdat'];
         }
+    }
+
+    updateSensorValues() {
+        console.log("updateSensorValues called");
+        this.dataService.getLatestSensorData().subscribe(data => {
+            // this.sensorData = data;
+            console.log("data is ", data.response);
+            const parseData = {
+                id: data.response.id,
+                createdAt: data.response.createdAt,
+                data: JSON.parse(data.response.data),
+                date: data.response.createdAt
+            };
+
+            if (this.datas.length === 0 || this.datas[this.datas.length - 1].id !== parseData.id) {
+                this.datas = [...this.datas, parseData];
+            }
+            console.log("datas is ", this.datas)
+        });
     }
 }

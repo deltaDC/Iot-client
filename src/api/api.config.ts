@@ -8,5 +8,6 @@ export const API_CONFIG = {
         SENSOR_LATEST: 'sensor/latest',
         HISTORY_LIST: 'history/list',
         DEVICE_LIST: 'device/list',
+        DEVICE_TOGGLE: 'device/toggle',
     }
 };
