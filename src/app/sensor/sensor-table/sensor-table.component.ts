@@ -93,8 +93,10 @@ export class SensorTableComponent {
                 };
                 if ((this.datas.length === 0
                     || this.datas[this.datas.length - 1].id !== parseData.id)
-                    && !this.isOnFiltered) {
+                    && !this.isOnFiltered
+                ) {
                     this.datas = [...this.datas, parseData];
+                    this.totalElements += 1
                 }
                 console.log("--------------------");
             },
@@ -156,6 +158,10 @@ export class SensorTableComponent {
         // Adjust the column name if it is 'createdat'
         const adjustedColumn = column.toLowerCase() === 'createdat' ? 'createdAt' : column.toLowerCase();
         this.params[adjustedColumn] = filterValue;
+        if (this.params["page"]) {
+            this.params["page"] = 0
+            this.table!.first = 0;
+        }
 
         this.dataService.getSensorData(this.params).subscribe((response: BaseResponse) => {
             console.log("Filtered data:", response);

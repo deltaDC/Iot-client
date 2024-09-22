@@ -119,6 +119,10 @@ export class HistoryTableComponent {
 
         // const params = { [adjustedColumn]: filterValue };
         this.params[adjustedColumn] = filterValue;
+        if (this.params["page"]) {
+            this.params["page"] = 0
+            this.table!.first = 0;
+        }
         console.log("params is:", this.params)
 
         this.dataService.getHistoryData(this.params).subscribe((response: BaseResponse) => {
