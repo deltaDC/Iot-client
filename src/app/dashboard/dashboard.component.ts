@@ -7,6 +7,8 @@ import { ChartComponent } from "./chart/chart.component";
 import { DataService } from '../service/data.service';
 import { Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
+import { WebSocketService } from '../service/websocket.service';
+// import { WebSocketService } from '../service/websocket.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -22,12 +24,12 @@ export class DashboardComponent {
     intervalId: any;
     private sensorSubscription: Subscription | undefined;
     private deviceSubscription: Subscription | undefined;
+    private socketSubcription: Subscription | undefined;
 
-    constructor(private dataService: DataService) { }
+    constructor(private dataService: DataService, private webSocketService: WebSocketService) { }
 
     ngOnInit(): void {
         this.sensorSubscription = this.dataService.getLatestSensorData().subscribe(data => {
-            // this.sensorData = data;
             console.log("data is ", data.response);
             const parseData = {
                 id: data.response.id,
@@ -44,6 +46,25 @@ export class DashboardComponent {
             this.deviceDatas = data.response
             console.log("device data is ", this.deviceDatas)
         })
+
+        this.socketSubcription = this.webSocketService.getSensorUpdates().subscribe(
+            data => {
+                console.log("--------------------");
+                console.log("Sensor data is updated from socket subscription");
+                console.log(data);
+                const parseData = {
+                    id: data.id,
+                    createdAt: data.createdAt,
+                    data: JSON.parse(data.data),
+                    date: data.createdAt
+                };
+                this.sensorData = parseData;
+                console.log("--------------------");
+            },
+            error => {
+                console.error("WebSocket error:", error);
+            }
+        );
 
         // this.intervalId = setInterval(() => {
         //     this.updateSensorValues();

@@ -20,6 +20,7 @@ import { Sensor } from '../../types/sensor.type';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { BaseResponse } from '../../types/baseresponse.type';
 import { DataService } from '../../service/data.service';
+import { WebSocketService } from '../../service/websocket.service';
 
 @Component({
     selector: 'app-sensor-table',
@@ -63,12 +64,15 @@ export class SensorTableComponent {
     ];
     selectedFilter = 'all';
     intervalId: any
+    socketSubcription: any
+    isOnFiltered: boolean = false;
+    params: any = {};
 
     rows: number = 10;
 
     @ViewChild(Table) table: Table | undefined;
 
-    constructor(private dataService: DataService) { }
+    constructor(private dataService: DataService, private webSocketService: WebSocketService) { }
 
     ngOnInit() {
         this.columns = ["Id", "Temperature", "Humidity", "Brightness", "CreatedAt"]
@@ -76,14 +80,36 @@ export class SensorTableComponent {
         this.filteredColumns = [...this.columns];
         console.log(this.filteredColumns)
 
-        // this.intervalId = setInterval(() => {
-        //     this.updateSensorValues();
-        // }, 5000);
+        this.socketSubcription = this.webSocketService.getSensorUpdates().subscribe(
+            data => {
+                console.log("--------------------");
+                console.log("Sensor data is updated from socket subscription");
+                console.log(data);
+                const parseData = {
+                    id: data.id,
+                    createdAt: data.createdAt,
+                    data: JSON.parse(data.data),
+                    date: data.createdAt
+                };
+                if ((this.datas.length === 0
+                    || this.datas[this.datas.length - 1].id !== parseData.id)
+                    && !this.isOnFiltered) {
+                    this.datas = [...this.datas, parseData];
+                }
+                console.log("--------------------");
+            },
+            error => {
+                console.error("WebSocket error:", error);
+            }
+        );
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['datas'] && changes['datas'].currentValue) {
             // console.log('Received sensor data in child component:', this.datas);
+            if (this.datas.length === 0) {
+                this.params = {}
+            }
         }
 
         if (changes['totalElements'] && changes['totalElements'].currentValue) {
@@ -120,13 +146,18 @@ export class SensorTableComponent {
     onFilterChange(event: any, column: string): void {
         console.log("triggered filter change");
         const filterValue = event.target.value;
+        if (filterValue.length > 0) {
+            this.isOnFiltered = true
+            console.log("isOnFilter change")
+        } else this.isOnFiltered = false;
+
         console.log('Filter value:', filterValue);
 
         // Adjust the column name if it is 'createdat'
         const adjustedColumn = column.toLowerCase() === 'createdat' ? 'createdAt' : column.toLowerCase();
-        const params = { [adjustedColumn]: filterValue };
+        this.params[adjustedColumn] = filterValue;
 
-        this.dataService.getSensorData(params).subscribe((response: BaseResponse) => {
+        this.dataService.getSensorData(this.params).subscribe((response: BaseResponse) => {
             console.log("Filtered data:", response);
             this.datas = response.response.content.map((item: any) => ({
                 id: item.id,
@@ -138,36 +169,36 @@ export class SensorTableComponent {
         });
     }
 
-    onSort(event: any): void {
-        const sortField = event.field;
-        const sortOrder = event.order === 1 ? 'ASC' : 'DESC';
-        console.log('Sort field:', sortField);
-        console.log('Sort order:', sortOrder);
+    // onSort(event: any): void {
+    //     const sortField = event.field;
+    //     const sortOrder = event.order === 1 ? 'ASC' : 'DESC';
+    //     console.log('Sort field:', sortField);
+    //     console.log('Sort order:', sortOrder);
 
-        // Adjust the column name if it is 'createdat'
-        const adjustedSortField = sortField.toLowerCase() === 'createdat' ? 'createdAt' : sortField.toLowerCase();
-        const params = { sortBy: adjustedSortField, sortDirection: sortOrder };
+    //     // Adjust the column name if it is 'createdat'
+    //     const adjustedSortField = sortField.toLowerCase() === 'createdat' ? 'createdAt' : sortField.toLowerCase();
+    //     const params = { sortBy: adjustedSortField, sortDirection: sortOrder };
 
-        this.dataService.getSensorData(params).subscribe((response: BaseResponse) => {
-            console.log("Sorted data:", response);
-            this.datas = response.response.content.map((item: any) => ({
-                id: item.id,
-                createdAt: item.createdAt,
-                data: JSON.parse(item.data),
-                icon: item.icon
-            }));
-        });
-    }
+    //     this.dataService.getSensorData(params).subscribe((response: BaseResponse) => {
+    //         console.log("Sorted data:", response);
+    //         this.datas = response.response.content.map((item: any) => ({
+    //             id: item.id,
+    //             createdAt: item.createdAt,
+    //             data: JSON.parse(item.data),
+    //             icon: item.icon
+    //         }));
+    //     });
+    // }
 
-    getTotalPages(): number {
-        if (this.table) {
-            const totalRecords = this.table.totalRecords;
-            const rows = this.table.rows;
-            if (rows === undefined) return 0
-            return Math.ceil(totalRecords / rows);
-        }
-        return 0;
-    }
+    // getTotalPages(): number {
+    //     if (this.table) {
+    //         const totalRecords = this.table.totalRecords;
+    //         const rows = this.table.rows;
+    //         if (rows === undefined) return 0
+    //         return Math.ceil(totalRecords / rows);
+    //     }
+    //     return 0;
+    // }
 
     loadData(event: any): void {
         console.log("loadData run")
@@ -177,16 +208,14 @@ export class SensorTableComponent {
         const sortField = event.sortField || '';
         const sortOrder = event.sortOrder === 1 ? 'ASC' : 'DESC';
 
-        const params = {
-            page: page,
-            size: pageSize,
-            sortBy: sortField,
-            sortDirection: sortOrder
-        };
+        this.params["page"] = page
+        this.params['size'] = pageSize
+        this.params["sortBy"] = sortField
+        this.params["sortDirection"] = sortOrder
 
-        console.log(params);
+        console.log(this.params);
 
-        this.dataService.getSensorData(params).subscribe((response: BaseResponse) => {
+        this.dataService.getSensorData(this.params).subscribe((response: BaseResponse) => {
             console.log("Paged data:", response);
             this.datas = response.response.content.map((item: any) => ({
                 id: item.id,
@@ -215,24 +244,5 @@ export class SensorTableComponent {
         } else if (filter === 'brightness') {
             this.filteredColumns = ['id', 'brightness', 'createdat'];
         }
-    }
-
-    updateSensorValues() {
-        console.log("updateSensorValues called");
-        this.dataService.getLatestSensorData().subscribe(data => {
-            // this.sensorData = data;
-            console.log("data is ", data.response);
-            const parseData = {
-                id: data.response.id,
-                createdAt: data.response.createdAt,
-                data: JSON.parse(data.response.data),
-                date: data.response.createdAt
-            };
-
-            if (this.datas.length === 0 || this.datas[this.datas.length - 1].id !== parseData.id) {
-                this.datas = [...this.datas, parseData];
-            }
-            console.log("datas is ", this.datas)
-        });
     }
 }

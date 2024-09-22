@@ -5,8 +5,8 @@
 
     <p-table #dt [value]="datas" [rows]="rows" [paginator]="true" [rowsPerPageOptions]="[5, 10, 25, 50]"
         [responsive]="true" [globalFilterFields]="globalFilterFields" [tableStyle]="{ 'min-width': '75rem' }"
-        [rowHover]="true" dataKey="id" [showCurrentPageReport]="true" (onSort)="onSort($event)" [customSort]="true"
-        [lazy]="true" [totalRecords]="totalElements" (onLazyLoad)="loadData($event)" (onPage)="onPage($event)">
+        [rowHover]="true" dataKey="id" [showCurrentPageReport]="true" [customSort]="true" [lazy]="true"
+        [totalRecords]="totalElements" (onLazyLoad)="loadData($event)" (onPage)="onPage($event)">
         <!-- <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <span class="p-input-icon-left">

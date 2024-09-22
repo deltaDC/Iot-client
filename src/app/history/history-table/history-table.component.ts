@@ -55,6 +55,8 @@ export class HistoryTableComponent {
     columns: any[] = [];
     globalFilterFields: string[] = [];
 
+    params: any = {}
+
     rows: number = 10;
 
     @ViewChild(Table) table: Table | undefined;
@@ -115,43 +117,44 @@ export class HistoryTableComponent {
         if (column === 'Device Name') adjustedColumn = "deviceName"
         if (column === 'Status') adjustedColumn = "status"
 
-        const params = { [adjustedColumn]: filterValue };
-        console.log("params is:", params)
+        // const params = { [adjustedColumn]: filterValue };
+        this.params[adjustedColumn] = filterValue;
+        console.log("params is:", this.params)
 
-        this.dataService.getHistoryData(params).subscribe((response: BaseResponse) => {
+        this.dataService.getHistoryData(this.params).subscribe((response: BaseResponse) => {
             console.log("Filtered data:", response);
             this.datas = response.response.content
             this.totalElements = response.response.totalElements;
         });
     }
 
-    onSort(event: any): void {
-        const sortField = event.field;
-        const sortOrder = event.order === 1 ? 'ASC' : 'DESC';
-        console.log('Sort field:', sortField);
-        console.log('Sort order:', sortOrder);
+    // onSort(event: any): void {
+    //     const sortField = event.field;
+    //     const sortOrder = event.order === 1 ? 'ASC' : 'DESC';
+    //     console.log('Sort field:', sortField);
+    //     console.log('Sort order:', sortOrder);
 
-        // Adjust the column name if it is 'createdat'
-        let adjustedSortField = sortField.toLowerCase() === 'createdat' ? 'createdAt' : sortField.toLowerCase();
-        if (sortField === 'Device Name') adjustedSortField = "deviceName"
+    //     // Adjust the column name if it is 'createdat'
+    //     let adjustedSortField = sortField.toLowerCase() === 'createdat' ? 'createdAt' : sortField.toLowerCase();
+    //     if (sortField === 'Device Name') adjustedSortField = "deviceName"
 
-        const params = { sortBy: adjustedSortField, sortDirection: sortOrder };
+    //     const params = { sortBy: adjustedSortField, sortDirection: sortOrder };
 
-        this.dataService.getHistoryData(params).subscribe((response: BaseResponse) => {
-            console.log("Sorted data:", response);
-            this.datas = response.response.content;
-        });
-    }
+    //     this.dataService.getHistoryData(params).subscribe((response: BaseResponse) => {
+    //         console.log("Sorted data:", response);
+    //         this.datas = response.response.content;
+    //     });
+    // }
 
-    getTotalPages(): number {
-        if (this.table) {
-            const totalRecords = this.table.totalRecords;
-            const rows = this.table.rows;
-            if (rows === undefined) return 0
-            return Math.ceil(totalRecords / rows);
-        }
-        return 0;
-    }
+    // getTotalPages(): number {
+    //     if (this.table) {
+    //         const totalRecords = this.table.totalRecords;
+    //         const rows = this.table.rows;
+    //         if (rows === undefined) return 0
+    //         return Math.ceil(totalRecords / rows);
+    //     }
+    //     return 0;
+    // }
 
     loadData(event: any): void {
         console.log("loadData run")
@@ -162,16 +165,21 @@ export class HistoryTableComponent {
         if (sortField === "Device Name") sortField = "deviceName"
         const sortOrder = event.sortOrder === 1 ? 'ASC' : 'DESC';
 
-        const params = {
-            page: page,
-            size: pageSize,
-            sortBy: sortField,
-            sortDirection: sortOrder
-        };
+        this.params["page"] = page
+        this.params['size'] = pageSize
+        this.params["sortBy"] = sortField
+        this.params["sortDirection"] = sortOrder
 
-        console.log(params);
+        // const params = {
+        //     page: page,
+        //     size: pageSize,
+        //     sortBy: sortField,
+        //     sortDirection: sortOrder
+        // };
 
-        this.dataService.getHistoryData(params).subscribe((response: BaseResponse) => {
+        // console.log(params);
+
+        this.dataService.getHistoryData(this.params).subscribe((response: BaseResponse) => {
             console.log("Paged data:", response);
             this.datas = response.response.content
             this.totalElements = response.response.totalElements;
