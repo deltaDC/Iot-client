@@ -82,10 +82,6 @@ export class HistoryTableComponent {
         // }
     }
 
-    ngAfterViewInit() {
-        // console.log('Total pages:', this.getTotalPages());
-    }
-
     applyFilterGlobal($event: any, stringVal: any) {
         this.table!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
     }
@@ -132,34 +128,6 @@ export class HistoryTableComponent {
         });
     }
 
-    // onSort(event: any): void {
-    //     const sortField = event.field;
-    //     const sortOrder = event.order === 1 ? 'ASC' : 'DESC';
-    //     console.log('Sort field:', sortField);
-    //     console.log('Sort order:', sortOrder);
-
-    //     // Adjust the column name if it is 'createdat'
-    //     let adjustedSortField = sortField.toLowerCase() === 'createdat' ? 'createdAt' : sortField.toLowerCase();
-    //     if (sortField === 'Device Name') adjustedSortField = "deviceName"
-
-    //     const params = { sortBy: adjustedSortField, sortDirection: sortOrder };
-
-    //     this.dataService.getHistoryData(params).subscribe((response: BaseResponse) => {
-    //         console.log("Sorted data:", response);
-    //         this.datas = response.response.content;
-    //     });
-    // }
-
-    // getTotalPages(): number {
-    //     if (this.table) {
-    //         const totalRecords = this.table.totalRecords;
-    //         const rows = this.table.rows;
-    //         if (rows === undefined) return 0
-    //         return Math.ceil(totalRecords / rows);
-    //     }
-    //     return 0;
-    // }
-
     loadData(event: any): void {
         console.log("loadData run")
         const page = event.first / event.rows;
@@ -173,15 +141,6 @@ export class HistoryTableComponent {
         this.params['size'] = pageSize
         this.params["sortBy"] = sortField
         this.params["sortDirection"] = sortOrder
-
-        // const params = {
-        //     page: page,
-        //     size: pageSize,
-        //     sortBy: sortField,
-        //     sortDirection: sortOrder
-        // };
-
-        // console.log(params);
 
         this.dataService.getHistoryData(this.params).subscribe((response: BaseResponse) => {
             console.log("Paged data:", response);

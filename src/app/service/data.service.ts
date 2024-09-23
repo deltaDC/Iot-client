@@ -9,8 +9,6 @@ import { Observable } from 'rxjs';
 })
 export class DataService {
 
-    baseUrl: string = API_CONFIG.BASE_URL;
-
     constructor(private http: HttpClient) { }
 
     getSensorData(params?: { [key: string]: string | number }): Observable<BaseResponse> {

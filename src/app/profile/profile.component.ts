@@ -10,9 +10,6 @@ import { ButtonModule } from 'primeng/button';
     styleUrl: './profile.component.css'
 })
 export class ProfileComponent {
-    // name: string = 'Pham Duc Chinh';
-    // id: string = 'B21DCCN181';
-    // class: string = 'IoT N11';
 
     studentCode: string = 'B21DCCN181';
     class: string = 'IoT N11';

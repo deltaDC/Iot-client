@@ -13,7 +13,6 @@
 ::ng-deep .p-card,
 ::ng-deep .p-card .p-card-body,
 ::ng-deep .p-card .p-card-body .p-card-content {
-    /* display: none; */
     width: 100%;
     height: 100%;
 }

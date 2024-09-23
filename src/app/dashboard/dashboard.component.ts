@@ -8,7 +8,6 @@ import { DataService } from '../service/data.service';
 import { Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { WebSocketService } from '../service/websocket.service';
-// import { WebSocketService } from '../service/websocket.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -21,7 +20,6 @@ export class DashboardComponent {
 
     sensorData!: Sensor;
     deviceDatas: Device[] = [];
-    intervalId: any;
     private sensorSubscription: Subscription | undefined;
     private deviceSubscription: Subscription | undefined;
     private socketSubcription: Subscription | undefined;
@@ -65,37 +63,17 @@ export class DashboardComponent {
                 console.error("WebSocket error:", error);
             }
         );
-
-        // this.intervalId = setInterval(() => {
-        //     this.updateSensorValues();
-        // }, 5000);
     }
 
     ngOnDestroy(): void {
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-        }
         if (this.sensorSubscription) {
             this.sensorSubscription.unsubscribe();
         }
         if (this.deviceSubscription) {
             this.deviceSubscription.unsubscribe();
         }
+        if (this.socketSubcription) {
+            this.socketSubcription.unsubscribe();
+        }
     }
-
-    updateSensorValues() {
-        this.dataService.getLatestSensorData().subscribe(data => {
-            // this.sensorData = data;
-            console.log("data is ", data.response);
-            const parseData = {
-                id: data.response.id,
-                createdAt: data.response.createdAt,
-                data: JSON.parse(data.response.data),
-                date: data.response.createdAt
-            };
-            this.sensorData = parseData;
-            console.log("sensorData is ", this.sensorData)
-        });
-    }
-
 }

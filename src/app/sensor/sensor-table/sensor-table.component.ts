@@ -63,7 +63,6 @@ export class SensorTableComponent {
         { label: 'Brightness', value: 'brightness' }
     ];
     selectedFilter = 'all';
-    intervalId: any
     socketSubcription: any
     isOnFiltered: boolean = false;
     params: any = {};
@@ -124,13 +123,9 @@ export class SensorTableComponent {
     }
 
     ngOnDestroy(): void {
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
+        if (this.socketSubcription) {
+            clearInterval(this.socketSubcription);
         }
-    }
-
-    applyFilterGlobal($event: any, stringVal: any) {
-        this.table!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
     }
 
     getRowDataValue(column: string, rowData: any): any {
@@ -155,7 +150,6 @@ export class SensorTableComponent {
 
         console.log('Filter value:', filterValue);
 
-        // Adjust the column name if it is 'createdat'
         const adjustedColumn = column.toLowerCase() === 'createdat' ? 'createdAt' : column.toLowerCase();
         this.params[adjustedColumn] = filterValue;
         if (this.params["page"]) {
@@ -174,37 +168,6 @@ export class SensorTableComponent {
             this.totalElements = response.response.totalElements;
         });
     }
-
-    // onSort(event: any): void {
-    //     const sortField = event.field;
-    //     const sortOrder = event.order === 1 ? 'ASC' : 'DESC';
-    //     console.log('Sort field:', sortField);
-    //     console.log('Sort order:', sortOrder);
-
-    //     // Adjust the column name if it is 'createdat'
-    //     const adjustedSortField = sortField.toLowerCase() === 'createdat' ? 'createdAt' : sortField.toLowerCase();
-    //     const params = { sortBy: adjustedSortField, sortDirection: sortOrder };
-
-    //     this.dataService.getSensorData(params).subscribe((response: BaseResponse) => {
-    //         console.log("Sorted data:", response);
-    //         this.datas = response.response.content.map((item: any) => ({
-    //             id: item.id,
-    //             createdAt: item.createdAt,
-    //             data: JSON.parse(item.data),
-    //             icon: item.icon
-    //         }));
-    //     });
-    // }
-
-    // getTotalPages(): number {
-    //     if (this.table) {
-    //         const totalRecords = this.table.totalRecords;
-    //         const rows = this.table.rows;
-    //         if (rows === undefined) return 0
-    //         return Math.ceil(totalRecords / rows);
-    //     }
-    //     return 0;
-    // }
 
     loadData(event: any): void {
         console.log("loadData run")

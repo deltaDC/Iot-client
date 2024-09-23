@@ -39,7 +39,6 @@ export class DeviceControlComponent {
         console.log(this.data)
         const status = !this.isLightbulbOn;
         console.log(status)
-        let command = `LED${this.data.id} ${status ? 'ON' : 'OFF'}`;
 
         this.dataService.toggleDevice({ deviceId: this.data.id, status: status ? 'ON' : 'OFF' }).subscribe(response => {
             const jsonResponse = JSON.parse(response.response);
