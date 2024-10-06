@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Sensor } from '../types/sensor.type';
 import { CardComponent } from "./card/card.component";
 import { DeviceControlComponent } from "./device-control/device-control.component";
@@ -8,23 +8,39 @@ import { DataService } from '../service/data.service';
 import { Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { WebSocketService } from '../service/websocket.service';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [CardComponent, DeviceControlComponent, ChartComponent, ButtonModule],
+    imports: [
+        CardComponent,
+        DeviceControlComponent,
+        ChartComponent,
+        ButtonModule,
+        ToastModule
+    ],
     templateUrl: './dashboard.component.html',
-    styleUrl: './dashboard.component.css'
+    styleUrl: './dashboard.component.css',
+    providers: [MessageService]
 })
 export class DashboardComponent {
 
     sensorData!: Sensor;
     deviceDatas: Device[] = [];
+    isAlert = false;
+    isToast = false;
+
     private sensorSubscription: Subscription | undefined;
     private deviceSubscription: Subscription | undefined;
     private socketSubcription: Subscription | undefined;
 
-    constructor(private dataService: DataService, private webSocketService: WebSocketService) { }
+    constructor(
+        private dataService: DataService,
+        private webSocketService: WebSocketService,
+        private messageService: MessageService
+    ) { }
 
     ngOnInit(): void {
         this.sensorSubscription = this.dataService.getLatestSensorData().subscribe(data => {
@@ -57,12 +73,40 @@ export class DashboardComponent {
                     date: data.createdAt
                 };
                 this.sensorData = parseData;
+                const someData = this.sensorData.data?.someData?.value ?? 0;
+
+                if (someData > 80 && this.isAlert === false && this.isAlert === false) {
+                    this.messageService.add({ severity: 'warn', summary: 'High someData', detail: `someData is ${someData}°C`, sticky: true });
+                    this.isToast = true;
+                    this.dataService.blinkDevice("LED BLINK").subscribe(data => {
+                        console.log("LED BLINK")
+                        console.log(data)
+                        console.log(data.response)
+                        if (data.response === "LED BLINK") {
+                            this.isAlert = true;
+                        }
+                    })
+                }
                 console.log("--------------------");
             },
             error => {
                 console.error("WebSocket error:", error);
             }
         );
+    }
+
+    onAlertClose() {
+        console.log("alert close");
+        this.isToast = false;
+        if (this.isAlert === true) {
+            this.dataService.blinkDevice("LED NOT BLINK").subscribe(data => {
+                console.log("LED NOT BLINK")
+                console.log(data)
+                if (data.response === "LED NOT BLINK") {
+                    this.isAlert = false;
+                }
+            })
+        }
     }
 
     ngOnDestroy(): void {

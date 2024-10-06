@@ -14,7 +14,7 @@ export class ProfileComponent {
     studentCode: string = 'B21DCCN181';
     class: string = 'IoT N11';
     name: string = 'Pham Duc Chinh';
-    pdfUrl: string = 'https://example.com/your-pdf-file.pdf';
+    pdfUrl: string = 'https://drive.google.com/file/d/1YkZEOKYMwZwoxNt7UgPNa_iRcapkI8A0/view?usp=sharing';
     githubUrl: string = 'https://github.com/deltaDC/Iot-system-client';
-    apiDocUrl: string = 'https://example.com/api-doc';
+    apiDocUrl: string = 'https://documenter.getpostman.com/view/23859003/2sAXqv3fUV';
 }

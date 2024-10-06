@@ -75,6 +75,7 @@ export class SensorTableComponent {
 
     ngOnInit() {
         this.columns = ["Id", "Temperature", "Humidity", "Brightness", "CreatedAt"]
+        // this.columns = ["Id", "Temperature", "Humidity", "Brightness", "Somedata", "CreatedAt"]
         this.globalFilterFields = [...this.columns];
         this.filteredColumns = [...this.columns];
         console.log(this.filteredColumns)
@@ -133,7 +134,8 @@ export class SensorTableComponent {
         if (lowerCaseColumn === 'id') {
             return rowData[lowerCaseColumn];
         } else if (rowData.data && rowData.data[lowerCaseColumn]) {
-            return `${rowData.data[lowerCaseColumn].value} ${rowData.data[lowerCaseColumn].unit}`;
+            // return `${rowData.data[lowerCaseColumn].value} ${rowData.data[lowerCaseColumn].unit}`;
+            return `${rowData.data[lowerCaseColumn].value}`;
         } else if (lowerCaseColumn === 'createdat') {
             return rowData["createdAt"];
         }

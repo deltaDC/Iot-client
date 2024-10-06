@@ -9,5 +9,6 @@ export const API_CONFIG = {
         HISTORY_LIST: 'history/list',
         DEVICE_LIST: 'device/list',
         DEVICE_TOGGLE: 'device/toggle',
+        DEVICE_BLINK: 'device/blink'
     }
 };

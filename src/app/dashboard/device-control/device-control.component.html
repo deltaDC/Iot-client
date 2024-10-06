@@ -2,7 +2,9 @@
     [style.backgroundColor]="isLightbulbOn ? '#FFE5C2' : '#333333'">
     <fa-icon [icon]="faLightbulb" [style.color]="isLightbulbOn ? '#FEBD3C' : '#F2F2F2'"
         class="text-5xl mr-4 cursor-pointer" (click)="toggleLightbulb()"></fa-icon>
-    <p-toggleButton (onChange)="toggleLightbulb()" class="mr-4" [(ngModel)]="checked" onLabel="On" offLabel="Off"
-        [class.lightbulb-on]="isLightbulbOn" [class.lightbulb-off]="!isLightbulbOn" />
-    <span class="text-lg">{{data.name}}</span>
+    <p-toggleButton [disabled]="isAlert" (onChange)="toggleLightbulb()" class="mr-4" [(ngModel)]="checked" onLabel="On"
+        offLabel="Off" [class.lightbulb-on]="isLightbulbOn" [class.lightbulb-off]="!isLightbulbOn" />
+    <span class="text-lg" [ngClass]="{'text-white': !isLightbulbOn, 'text-black': isLightbulbOn}">
+        {{data.name}}
+    </span>
 </label>

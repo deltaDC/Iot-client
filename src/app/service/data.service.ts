@@ -44,4 +44,8 @@ export class DataService {
     toggleDevice(request: { deviceId: number, status: String }): Observable<BaseResponse> {
         return this.http.post<BaseResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.DEVICE_TOGGLE}`, request);
     }
+
+    blinkDevice(request: string): Observable<BaseResponse> {
+        return this.http.post<BaseResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.DEVICE_BLINK}`, request);
+    }
 }

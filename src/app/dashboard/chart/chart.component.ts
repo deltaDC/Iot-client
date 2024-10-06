@@ -2,6 +2,7 @@ import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { Sensor } from '../../types/sensor.type';
 import { Chart, ChartConfiguration, ChartData, ChartType, registerables } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { DataService } from '../../service/data.service';
 
 Chart.register(...registerables);
 
@@ -19,6 +20,9 @@ export class ChartComponent {
     temperatureDatas: number[] = [];
     humidityDatas: number[] = [];
     brightnessDatas: number[] = [];
+    someDatas: number[] = [];
+
+    constructor(private dataService: DataService) { }
 
     DATA_LIMIT = 30
     shiftCnt = 0
@@ -60,6 +64,16 @@ export class ChartComponent {
         }
         this.brightnessDatas.push(brightnessData);
 
+        const someData = sensorData.data.someData?.value;
+        console.log("sensor data is ", sensorData.data)
+        console.log("someData is ", someData)
+        if (this.someDatas.length >= this.DATA_LIMIT) {
+            this.someDatas.shift();
+        }
+        if (someData !== undefined) {
+            this.someDatas.push(someData);
+        }
+
         const startIndex = Math.max(0, this.shiftCnt);
         const labels = Array.from({ length: this.temperatureDatas.length }, (_, i) => (startIndex + i + 1).toString());
 
@@ -71,6 +85,7 @@ export class ChartComponent {
             this.chart.chart.data.datasets[0].data = this.temperatureDatas;
             this.chart.chart.data.datasets[1].data = this.humidityDatas;
             this.chart.chart.data.datasets[2].data = this.brightnessDatas;
+            this.chart.chart.data.datasets[3].data = this.someDatas;
             this.chart.chart.update();
         } else {
             this.lineChartData = {
@@ -94,6 +109,13 @@ export class ChartComponent {
                         data: this.brightnessDatas,
                         label: 'Brightness',
                         borderColor: 'yellow',
+                        fill: false,
+                        tension: 0.5
+                    },
+                    {
+                        data: this.someDatas,
+                        label: 'Some Data',
+                        borderColor: 'green',
                         fill: false,
                         tension: 0.5
                     }

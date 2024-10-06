@@ -1,3 +1,5 @@
+<p-toast (onClose)="onAlertClose()"></p-toast>
+
 <div class="flex justify-center mt-5">
     <app-card [data]="sensorData"></app-card>
 </div>
@@ -9,7 +11,7 @@
         <app-chart class="flex-grow" [sensorData]="sensorData"></app-chart>
         <div class="flex flex-col space-y-4 p-4 rounded-lg shadow-md w-1/5">
             @for (device of deviceDatas; track $index) {
-            <app-device-control [data]="device"></app-device-control>
+            <app-device-control [isAlert]="isAlert" [data]="device"></app-device-control>
             }
         </div>
     </div>
