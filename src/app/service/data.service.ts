@@ -48,4 +48,8 @@ export class DataService {
     blinkDevice(request: string): Observable<BaseResponse> {
         return this.http.post<BaseResponse>(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.DEVICE_BLINK}`, request);
     }
+
+    getWarningCnt(): Observable<BaseResponse> {
+        return this.http.get<BaseResponse>(`http://localhost:8080/api/device/getWarningCnt`)
+    }
 }

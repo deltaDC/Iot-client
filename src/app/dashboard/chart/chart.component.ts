@@ -20,7 +20,7 @@ export class ChartComponent {
     temperatureDatas: number[] = [];
     humidityDatas: number[] = [];
     brightnessDatas: number[] = [];
-    someDatas: number[] = [];
+    windDatas: number[] = [];
 
     constructor(private dataService: DataService) { }
 
@@ -64,14 +64,14 @@ export class ChartComponent {
         }
         this.brightnessDatas.push(brightnessData);
 
-        const someData = sensorData.data.someData?.value;
+        const wind = sensorData.data.wind?.value;
         console.log("sensor data is ", sensorData.data)
-        console.log("someData is ", someData)
-        if (this.someDatas.length >= this.DATA_LIMIT) {
-            this.someDatas.shift();
+        console.log("wind is ", wind)
+        if (this.windDatas.length >= this.DATA_LIMIT) {
+            this.windDatas.shift();
         }
-        if (someData !== undefined) {
-            this.someDatas.push(someData);
+        if (wind !== undefined) {
+            this.windDatas.push(wind);
         }
 
         const startIndex = Math.max(0, this.shiftCnt);
@@ -85,7 +85,7 @@ export class ChartComponent {
             this.chart.chart.data.datasets[0].data = this.temperatureDatas;
             this.chart.chart.data.datasets[1].data = this.humidityDatas;
             this.chart.chart.data.datasets[2].data = this.brightnessDatas;
-            this.chart.chart.data.datasets[3].data = this.someDatas;
+            this.chart.chart.data.datasets[3].data = this.windDatas;
             this.chart.chart.update();
         } else {
             this.lineChartData = {
@@ -113,8 +113,8 @@ export class ChartComponent {
                         tension: 0.5
                     },
                     {
-                        data: this.someDatas,
-                        label: 'Some Data',
+                        data: this.windDatas,
+                        label: 'Wind',
                         borderColor: 'green',
                         fill: false,
                         tension: 0.5

@@ -7,8 +7,9 @@ export interface Sensor {
         temperature: Data
         humidity: Data
         brightness: Data
-        someData?: Data
+        wind?: Data,
     },
     date: string
     icon?: string;
+    weather?: String
 }

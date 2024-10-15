@@ -1,12 +1,13 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { Sensor } from '../../types/sensor.type';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faQuestion, faTemperatureThreeQuarters } from '@fortawesome/free-solid-svg-icons';
+import { faQuestion, faTemperatureThreeQuarters, faWarning, faWind } from '@fortawesome/free-solid-svg-icons';
 import { faDroplet } from '@fortawesome/free-solid-svg-icons';
 import { faSun } from '@fortawesome/free-solid-svg-icons';
+import { DataService } from '../../service/data.service';
 
 @Component({
     selector: 'app-card',
@@ -22,18 +23,28 @@ import { faSun } from '@fortawesome/free-solid-svg-icons';
 })
 export class CardComponent {
     @Input() data!: Sensor;
+    @Input() warningCnt!: number
+    // warningCnt = 0;
 
     ngOnInit() {
         console.log("Card data from father is", this.data)
     }
 
-    ngOnChanges() {
-        console.log("Card data from father is", this.data)
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['warningCnt']) {
+            console.log("warningCnt changed to", changes['warningCnt'].currentValue);
+        }
+
+        if (changes['data']) {
+            console.log("data changed to", changes['data'].currentValue);
+        }
     }
 
     tempIcon = faTemperatureThreeQuarters;
     humidityIcon = faDroplet;
     brightnessIcon = faSun;
+    windIcon = faWind;
+    warningIcon = faWarning;
     questionIcon = faQuestion;
 
     // getIconColor(name: string, value: number): string {
@@ -74,18 +85,19 @@ export class CardComponent {
                 return '#93C5FD';
 
             case 'brightness':
-                if (value < 50) return '#B45309'; // Darker yellow
-                if (value < 100) return '#D97706'; // Dark yellow
-                if (value < 200) return '#F59E0B'; // Yellow
-                if (value < 300) return '#FBBF24'; // Light yellow
-                if (value < 400) return '#FDE68A'; // Lighter yellow
-                if (value < 500) return '#FEF3C7'; // Very light yellow
-                if (value < 600) return '#FFFBEB'; // Almost white yellow
-                if (value < 700) return '#FEF3C7'; // Very light yellow
-                if (value < 800) return '#FDE68A'; // Lighter yellow
-                return '#FBBF24'; // Light yellow
+                if (value < 50) return '#73580f';
+                if (value < 100) return '#8a6c1c';
+                if (value < 200) return '#9c7c25';
+                if (value < 300) return '#a8882f';
+                if (value < 400) return '#b8963b';
+                if (value < 500) return '#c2a146';
+                if (value < 600) return '#d1b054';
+                if (value < 700) return '#debd62';
+                if (value < 800) return '#edcc72';
+                if (value < 900) return '#ffdf87';
+                return '#FBBF24';
 
-            case 'someData':
+            case 'wind':
                 if (value <= 80) return '#0ffc03'
                 else if (value > 80) return "#fc0f03"
                 return "#fcd703"

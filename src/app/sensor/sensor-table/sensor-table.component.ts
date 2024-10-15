@@ -74,8 +74,8 @@ export class SensorTableComponent {
     constructor(private dataService: DataService, private webSocketService: WebSocketService) { }
 
     ngOnInit() {
-        this.columns = ["Id", "Temperature", "Humidity", "Brightness", "CreatedAt"]
-        // this.columns = ["Id", "Temperature", "Humidity", "Brightness", "Somedata", "CreatedAt"]
+        this.columns = ["Id", "Temperature", "Humidity", "Brightness", "Wind", "Weather", "CreatedAt"]
+        // this.columns = ["Id", "Temperature", "Humidity", "Brightness", "Wind", "CreatedAt"]
         this.globalFilterFields = [...this.columns];
         this.filteredColumns = [...this.columns];
         console.log(this.filteredColumns)
@@ -89,7 +89,8 @@ export class SensorTableComponent {
                     id: data.id,
                     createdAt: data.createdAt,
                     data: JSON.parse(data.data),
-                    date: data.createdAt
+                    date: data.createdAt,
+                    weather: data.weather
                 };
                 if ((this.datas.length === 0
                     || this.datas[this.datas.length - 1].id !== parseData.id)
@@ -138,6 +139,19 @@ export class SensorTableComponent {
             return `${rowData.data[lowerCaseColumn].value}`;
         } else if (lowerCaseColumn === 'createdat') {
             return rowData["createdAt"];
+        } else if (lowerCaseColumn === 'wind') {
+            console.log(JSON.stringify(rowData.data[`wind`]))
+            if (rowData.data && rowData.data['wind'] && rowData.data['wind'].value !== undefined && rowData.data['wind'].value > 0) {
+                return `${rowData.data['wind'].value}`;
+            } else {
+                return "No data";
+            }
+        } else if (lowerCaseColumn === 'weather') {
+            if (rowData['weather']?.length > 0) {
+                return `${rowData['weather']}`;
+            } else {
+                return "No data";
+            }
         }
         return null;
     }
@@ -165,7 +179,8 @@ export class SensorTableComponent {
                 id: item.id,
                 createdAt: item.createdAt,
                 data: JSON.parse(item.data),
-                icon: item.icon
+                icon: item.icon,
+                weather: item.weather
             }));
             this.totalElements = response.response.totalElements;
         });
@@ -192,6 +207,7 @@ export class SensorTableComponent {
                 id: item.id,
                 createdAt: item.createdAt,
                 data: JSON.parse(item.data),
+                weather: item.weather
             }));
             this.totalElements = response.response.totalElements;
         });

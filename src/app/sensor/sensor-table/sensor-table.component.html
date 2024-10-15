@@ -17,7 +17,7 @@
                 </th>
                 <th *ngFor="let column of filteredColumns" [pSortableColumn]="column"
                     [style.min-width]="column.minWidth || 'auto'">
-                    {{ column |uppercase }} <p-sortIcon [field]="column" />
+                    {{ column | uppercase }} <p-sortIcon [field]="column" />
                 </th>
                 <th></th>
             </tr>
@@ -38,6 +38,7 @@
                 <td>
                 </td>
                 <td *ngFor="let column of filteredColumns">
+                    <!-- {{rowData | json}} -->
                     {{getRowDataValue(column, rowData)}}
                 </td>
             </tr>

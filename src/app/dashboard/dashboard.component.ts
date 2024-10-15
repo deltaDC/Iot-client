@@ -31,6 +31,7 @@ export class DashboardComponent {
     deviceDatas: Device[] = [];
     isAlert = false;
     isToast = false;
+    warningCnt = 0;
 
     private sensorSubscription: Subscription | undefined;
     private deviceSubscription: Subscription | undefined;
@@ -43,13 +44,18 @@ export class DashboardComponent {
     ) { }
 
     ngOnInit(): void {
+        this.dataService.getWarningCnt().subscribe(data => {
+            this.warningCnt = data.response;
+        })
+
         this.sensorSubscription = this.dataService.getLatestSensorData().subscribe(data => {
             console.log("data is ", data.response);
             const parseData = {
                 id: data.response.id,
                 createdAt: data.response.createdAt,
                 data: JSON.parse(data.response.data),
-                date: data.response.createdAt
+                date: data.response.createdAt,
+                weather: data.response.weather
             };
             this.sensorData = parseData;
             console.log("sensorData is ", this.sensorData)
@@ -70,13 +76,14 @@ export class DashboardComponent {
                     id: data.id,
                     createdAt: data.createdAt,
                     data: JSON.parse(data.data),
-                    date: data.createdAt
+                    date: data.createdAt,
+                    weather: data.weather
                 };
                 this.sensorData = parseData;
-                const someData = this.sensorData.data?.someData?.value ?? 0;
+                const wind = this.sensorData.data?.wind?.value ?? 0;
 
-                if (someData > 80 && this.isAlert === false && this.isAlert === false) {
-                    this.messageService.add({ severity: 'warn', summary: 'High someData', detail: `someData is ${someData}°C`, sticky: true });
+                if (wind > 80 && this.isAlert === false && this.isToast === false) {
+                    this.messageService.add({ severity: 'warn', summary: 'High wind', detail: `wind is ${wind}`, sticky: true });
                     this.isToast = true;
                     this.dataService.blinkDevice("LED BLINK").subscribe(data => {
                         console.log("LED BLINK")
@@ -85,6 +92,10 @@ export class DashboardComponent {
                         if (data.response === "LED BLINK") {
                             this.isAlert = true;
                         }
+                    })
+
+                    this.dataService.getWarningCnt().subscribe(data => {
+                        this.warningCnt = data.response;
                     })
                 }
                 console.log("--------------------");
